@@ -54,7 +54,7 @@ public class HelpApplication {
         Map<String, String> result = new HashMap<>(2);
         // todo-dong4j : (2019年03月25日 14:39) [处理 where]
         reload();
-        result.put("code", "200")
+        result.put("code", "200");
         result.put("url", properties.getProperty("mik.url"));
         return result;
     }
