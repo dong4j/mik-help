@@ -60,7 +60,11 @@ public class FileController {
                 request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/archive/" + suffix + newFileName;
             return ResponseEntity.ok(new HashMap<String, Object>(2){
                 {
-                    put("url", urlPath);
+                    put("data", new HashMap<String, String>(){
+                        {
+                            put("url", urlPath);
+                        }
+                    });
                 }
             });
         } catch (Exception e) {
