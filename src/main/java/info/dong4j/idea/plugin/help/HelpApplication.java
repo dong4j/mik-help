@@ -41,14 +41,24 @@ import java.util.Properties;
  * <p>Description: </p>
  *
  * @author dong4j
- * @email dong4j@gmail.com
- * @since 2019-03-25 14:35
+ * @version 3.0.0
+ * @email dong4j @gmail.com
+ * @date 2020.01.14 01:52
+ * @since 1.0.0
  */
 @RestController
 @SpringBootApplication
 public class HelpApplication {
+    /** properties */
     private static Properties properties = new Properties();
 
+    /**
+     * Help url map
+     *
+     * @param where where
+     * @return the map
+     * @since 1.0.0
+     */
     @RequestMapping("/mik/help/{where}")
     public Map<String, String> helpUrl(@PathVariable("where") String where) {
         Map<String, String> result = new HashMap<>(2);
@@ -59,10 +69,21 @@ public class HelpApplication {
         return result;
     }
 
+    /**
+     * Main
+     *
+     * @param args args
+     * @since 1.0.0
+     */
     public static void main(String[] args) {
         SpringApplication.run(HelpApplication.class);
     }
 
+    /**
+     * Reload
+     *
+     * @since 1.0.0
+     */
     private static void reload() {
 
         try {
