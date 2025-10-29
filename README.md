@@ -1,357 +1,170 @@
 # MIK-Help
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-1.5.9-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-1.7%2B-orange.svg)](https://www.java.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D8.0.0-brightgreen.svg)](https://nodejs.org/)
 
-MIK-Help 是 [Markdown Image Kit](https://github.com/dong4j/markdown-image-kit) 插件的配套服务，提供两个核心功能：
+[Markdown Image Kit](https://github.com/dong4j/markdown-image-kit) 插件的配套服务集合，包含两个独立的服务：
 
-1. **自定义图床上传接口演示** - 展示如何实现自定义图床的文件上传 API
-2. **动态帮助文档服务** - 为插件设置页面提供可动态更新的帮助文档 URL
+1. **Upload API** - 多语言实现的自定义图床上传接口示例
+2. **Help API** - 动态帮助文档 URL 服务
 
 ## 📋 目录
 
-- [功能特性](#功能特性)
-- [技术栈](#技术栈)
+- [项目概述](#项目概述)
 - [项目结构](#项目结构)
 - [快速开始](#快速开始)
-- [功能详解](#功能详解)
-- [API 文档](#api-文档)
+- [服务说明](#服务说明)
+- [使用场景](#使用场景)
 - [部署指南](#部署指南)
-- [配置说明](#配置说明)
-- [开发指南](#开发指南)
+- [贡献指南](#贡献指南)
 
-## ✨ 功能特性
+## 📖 项目概述
 
-### 1. 自定义图床上传接口
+MIK-Help 项目旨在为 Markdown Image Kit 插件提供可扩展的后端服务支持。通过将复杂的服务端逻辑从插件中分离出来，降低了插件的复杂度，同时为用户提供了更大的灵活性。
 
-为 Markdown Image Kit 插件的"自定义图床"功能提供标准实现参考，开发者可以基于此示例快速搭建自己的图床服务。
+### 为什么需要这个项目？
 
-**核心特性：**
+**问题一：图床集成复杂度高**
 
-- ✅ 支持文件上传
-- ✅ 自动按文件类型分类存储
-- ✅ 生成唯一文件名避免冲突
-- ✅ 返回标准化响应格式
-- ✅ 支持静态资源访问
+Markdown Image Kit 插件已经内置了多种主流图床（阿里云 OSS、七牛云、腾讯云 COS 等），但：
 
-### 2. 动态帮助文档服务
+- 每个图床都需要集成 SDK 和处理逻辑
+- 插件体积越来越大
+- 用户的特殊需求（如自建图床、内网部署）难以满足
 
-为插件设置页面的 "Help" 按钮提供动态 URL 服务，无需更新插件即可随时调整帮助文档链接。
+**解决方案：Upload API**
 
-**核心特性：**
+提供统一的上传接口标准，用户可以：
 
-- ✅ 动态加载配置文件
-- ✅ 支持多种云存储平台的帮助文档链接
-- ✅ 配置热更新（每次请求自动刷新）
-- ✅ RESTful API 设计
-- ✅ 支持 HTTPS 和反向代理
+- 使用示例代码快速搭建自己的图床
+- 自定义图片处理逻辑（压缩、水印等）
+- 将 API 作为中转层，转发到任意目标图床
 
-## 🛠 技术栈
+**问题二：帮助文档更新需要发版**
 
-- **框架**: Spring Boot 1.5.9.RELEASE
-- **JDK**: 1.7+
-- **构建工具**: Maven 3.x
-- **Web 服务器**: Nginx (反向代理)
-- **部署**: 支持独立 JAR 部署
+插件中的帮助文档链接是硬编码的，每次更新都需要：
+
+- 修改代码
+- 发布新版本
+- 用户手动更新插件
+
+**解决方案：Help API**
+
+通过服务端动态返回帮助文档 URL：
+
+- 修改配置即可更新链接，无需重启服务
+- 插件无需更新即可获取最新文档
+- 可针对不同版本返回不同文档
 
 ## 📁 项目结构
 
 ```
 mik-help/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── info/dong4j/idea/plugin/help/
-│       │       ├── HelpApplication.java          # 主应用 + 帮助 URL 接口
-│       │       ├── config/
-│       │       │   └── WebMvcConfig.java         # Web MVC 配置
-│       │       └── controller/
-│       │           └── FileController.java        # 文件上传控制器
-│       ├── resources/
-│       │   ├── application.properties            # 应用配置（包含所有帮助链接）
-│       │   └── nginx.conf                        # Nginx 配置示例
-│       ├── assembly/
-│       │   └── assembly.xml                      # Maven 打包配置
-│       └── bin/
-│           └── server.sh                         # 启动脚本
-├── pom.xml                                       # Maven 项目配置
-└── README.md                                     # 项目文档
+├── upload-api/                    # 自定义图床上传接口
+│   ├── README.md                  # Upload API 总览文档
+│   ├── java/                      # Java 实现（Spring Boot）
+│   │   ├── README.md             # Java 实现文档
+│   │   ├── pom.xml               # Maven 配置
+│   │   └── src/                  # 源代码
+│   │       ├── main/
+│   │       │   ├── java/
+│   │       │   │   └── info/dong4j/idea/plugin/help/
+│   │       │   │       ├── UploadApplication.java      # 主应用
+│   │       │   │       ├── controller/
+│   │       │   │       │   └── FileController.java     # 上传控制器
+│   │       │   │       └── config/
+│   │       │   │           └── WebMvcConfig.java       # Web 配置
+│   │       │   └── resources/
+│   │       │       └── application.properties          # 应用配置
+│   │       └── bin/
+│   │           └── server.sh                          # 启动脚本
+│   └── [其他语言实现...]         # Node.js、Python、Go 等（计划中）
+│
+├── help-api/                      # 动态帮助文档服务
+│   ├── README.md                  # Help API 文档
+│   ├── index.js                   # Node.js 实现（单文件）
+│   ├── config.json                # 配置文件
+│   ├── package.json               # NPM 配置
+│   ├── start.sh                   # 启动脚本
+│   └── stop.sh                    # 停止脚本
+│
+└── README.md                      # 本文件
 ```
 
 ## 🚀 快速开始
 
-### 前置要求
+### Upload API - 快速体验
 
-- JDK 1.7 或更高版本
-- Maven 3.x
-- （可选）Nginx（用于生产环境部署）
-
-### 本地开发
-
-1. **克隆项目**
+#### Java 实现
 
 ```bash
-git clone https://github.com/dong4j/mik-help.git
-cd mik-help
-```
+# 1. 进入 Java 实现目录
+cd upload-api/java
 
-2. **配置文件上传路径**
+# 2. 配置上传路径
+vim src/main/resources/application.properties
+# 修改: web.upload-path=/your/upload/path/
 
-编辑 `src/main/resources/application.properties`：
-
-```properties
-# 自定义文件上传路径
-web.upload-path=/your/upload/path/
-# 服务端口
-server.port=12345
-```
-
-3. **运行应用**
-
-```bash
+# 3. 运行服务
 mvn clean spring-boot:run
+
+# 4. 测试上传
+curl -X POST http://localhost:12345/upload \
+  -F "fileName=@/path/to/image.png"
+
+# 5. 在浏览器中打开返回的 URL 预览图片
 ```
 
-或者在 IDE 中直接运行 `HelpApplication` 类，并配置 VM 参数：
+#### 配置 MIK 插件
 
-```
--Dconfig.path=src/main/resources/
-```
+1. 打开 IDE：`Settings/Preferences` → `Tools` → `Markdown Image Kit`
+2. 选择 `自定义` 图床
+3. 配置：
+    - URL: `http://localhost:12345/upload`
+    - 参数名: `fileName`
+    - JSON Path: `data.url`
 
-4. **测试接口**
+### Help API - 快速体验
 
-- 文件上传: `http://localhost:12345/upload`
-- 帮助链接: `http://localhost:12345/setting/{type}`
+```bash
+# 1. 进入 Help API 目录
+cd help-api
 
-## 📖 功能详解
+# 2. 配置帮助链接（可选，默认已配置）
+vim config.json
 
-### 功能一：自定义图床上传接口
+# 3. 启动服务
+node index.js
 
-#### 实现原理
-
-自定义图床上传功能在 `FileController.java` 中实现，提供了一个标准的文件上传 RESTful API。
-
-#### 工作流程
-
-```
-[客户端] → [POST /upload] → [FileController]
-                                    ↓
-                            1. 接收文件
-                            2. 验证文件
-                            3. 生成唯一文件名
-                            4. 按类型分类存储
-                            5. 返回访问 URL
-                                    ↓
-                            [返回 JSON 响应]
+# 4. 测试接口
+curl http://localhost:12346/setting/aliyun_cloud
 ```
 
-#### 关键代码解析
+## 📖 服务说明
 
-```java:1:73:mik-help/src/main/java/info/dong4j/idea/plugin/help/controller/FileController.java
-@RestController
-public class FileController {
-    
-    @Value("${web.upload-path}")
-    private String path;
-    
-    @RequestMapping("upload")
-    public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file, 
-                                    HttpServletRequest request) {
-        // 1. 验证文件
-        Assert.isTrue(!file.isEmpty(), "文件为空");
-        
-        // 2. 生成唯一文件名
-        String originalFilename = file.getOriginalFilename();
-        String suffix = originalFilename.substring(originalFilename.lastIndexOf(".") + 1) + "/";
-        String newFileName = System.currentTimeMillis() + originalFilename;
-        
-        // 3. 保存文件
-        String filePath = path + suffix + newFileName;
-        File file1 = new File(filePath);
-        if (!file1.getParentFile().exists()) {
-            file1.getParentFile().mkdirs();
-        }
-        file.transferTo(file1);
-        
-        // 4. 返回访问 URL
-        String urlPath = request.getScheme() + "://" + request.getServerName() 
-                       + ":" + request.getServerPort() 
-                       + "/archive/" + suffix + newFileName;
-        
-        return ResponseEntity.ok(new HashMap<String, Object>(){
-            {
-                put("data", new HashMap<String, String>(){
-                    {
-                        put("url", urlPath);
-                    }
-                });
-            }
-        });
-    }
-}
-```
+### Upload API - 自定义图床上传接口
 
-#### 在 Markdown Image Kit 中配置
+#### 功能特性
 
-1. 打开 IDEA/WebStorm 等 JetBrains IDE
-2. 进入 `Settings/Preferences` → `Tools` → `Markdown Image Kit`
-3. 选择 `自定义` 图床
-4. 配置上传接口：`http://your-server:12345/upload`
-5. 参数名：`fileName`
+- ✅ 多语言实现示例（Java、Node.js、Python、Go 等）
+- ✅ 统一的 RESTful API 规范
+- ✅ 文件按类型自动分类存储
+- ✅ 生成唯一文件名避免冲突
+- ✅ 支持静态资源预览
+- ✅ 简洁的代码实现，易于扩展
 
-### 功能二：动态帮助文档服务
+#### API 规范
 
-#### 实现原理
+**上传接口**: `POST /upload`
 
-这是一个更巧妙的设计，通过服务端接口动态返回帮助文档 URL，实现了"配置与代码分离"，避免了频繁更新插件。
-
-#### 完整工作流程
-
-```
-[用户点击 Help 按钮]
-        ↓
-[插件端] helpButton.addActionListener()
-        ↓
-组装请求 URL: /setting/{type}
-        ↓
-调用 MikNotification.helpUrl()
-        ↓
-[网络请求] → [ECS Nginx :443]
-                ↓ (反向代理)
-        [内网服务器 :12345]
-                ↓
-        [HelpApplication 处理]
-                ↓
-        1. 重新加载 application.properties
-        2. 根据 type 查找对应的 URL
-        3. 返回 JSON: {code: "200", url: "..."}
-                ↓
-[插件端] 接收 URL 并在浏览器中打开
-```
-
-#### 详细流程说明
-
-**第 1 步：插件端监听按钮事件**
-
-在 Markdown Image Kit 插件的设置页面，每个配置项都有一个 Help 按钮：
-
-```java
-// 在插件的设置页面代码中
-this.helpButton.addActionListener(e -> {
-    // 根据当前选中的图床类型组装 URL
-    String type = getCurrentCloudType(); // 如: "aliyun_cloud"
-    String url = "https://mik.dong4j.site/setting/" + type;
-    
-    // 调用通知工具类
-    MikNotification.helpUrl(project, url);
-});
-```
-
-**第 2 步：插件发起 HTTP 请求**
-
-`MikNotification.helpUrl()` 方法负责：
-
-- 发起 HTTP GET 请求到服务端
-- 解析返回的 JSON 响应
-- 在浏览器中打开返回的 URL
-
-**第 3 步：Nginx 反向代理**
-
-请求到达 ECS 服务器后，Nginx 负责 SSL 终止和反向代理：
-
-```nginx:1:20:mik-help/src/main/resources/nginx.conf
-server {
-    # HTTP 重定向到 HTTPS
-    listen 80;
-    server_name mik.dong4j.site;
-    return 301 https://$host$request_uri;
-}
-
-server {
-    # HTTPS 监听
-    listen 443 ssl http2;
-    server_name mik.dong4j.site;
-    
-    # SSL 证书配置
-    ssl_certificate /etc/nginx/encrypt/fullchain.pem;
-    ssl_certificate_key /etc/nginx/encrypt/privkey.pem;
-    
-    # 反向代理到内网服务
-    location / {
-        proxy_pass http://2.0.0.5:12345;
-    }
-}
-```
-
-**第 4 步：Spring Boot 应用处理请求**
-
-```java:62:78:mik-help/src/main/java/info/dong4j/idea/plugin/help/HelpApplication.java
-@RequestMapping("/{where}/{type}")
-public Map<String, String> helpUrl(@PathVariable("where") String where, 
-                                   @PathVariable("type") String type) {
-    Map<String, String> result = new HashMap<>(2);
-    
-    // 关键：每次请求都重新加载配置文件
-    reload();
-    
-    if ("setting".equals(where)) {
-        // 根据 type 查找对应的配置
-        String propertyKey = "mik.help." + type;
-        result.put("code", "200");
-        result.put("url", properties.getProperty(propertyKey, 
-                                                 properties.getProperty("mik.url")));
-        return result;
-    }
-    
-    // 默认返回主页
-    result.put("code", "200");
-    result.put("url", properties.getProperty("mik.url"));
-    return result;
-}
-```
-
-**第 5 步：配置文件热加载**
-
-这是整个设计的核心亮点：
-
-```java:95:102:mik-help/src/main/java/info/dong4j/idea/plugin/help/HelpApplication.java
-private static void reload() {
-    try {
-        String configPath = System.getProperty("config.path");
-        // 每次请求都重新加载配置文件
-        properties.load(new FileReader(configPath + "application.properties"));
-    } catch (IOException ignored) {
-    }
-}
-```
-
-**为什么要热加载？**
-
-1. **灵活性**：可以随时修改帮助文档 URL，无需重启服务
-2. **维护性**：文档链接更新后，用户立即生效
-3. **扩展性**：添加新的帮助链接只需修改配置文件
-
-## 📡 API 文档
-
-### 1. 文件上传接口
-
-**端点**: `POST /upload`
-
-**请求参数**:
-
-| 参数名      | 类型            | 必填 | 说明     |
-|----------|---------------|----|--------|
-| fileName | MultipartFile | 是  | 要上传的文件 |
-
-**请求示例**:
-
+**请求**:
 ```bash
 curl -X POST http://localhost:12345/upload \
   -F "fileName=@/path/to/image.png"
 ```
 
-**响应示例**:
-
+**响应**:
 ```json
 {
   "data": {
@@ -360,37 +173,63 @@ curl -X POST http://localhost:12345/upload \
 }
 ```
 
-### 2. 帮助文档接口
+**预览接口**: `GET /archive/{type}/{filename}`
 
-**端点**: `GET /{where}/{type}`
+#### 两种使用方式
 
-**路径参数**:
+**方式一：本地图床**
 
-| 参数名   | 类型     | 说明    | 示例           |
-|-------|--------|-------|--------------|
-| where | String | 来源位置  | setting      |
-| type  | String | 云存储类型 | aliyun_cloud |
-
-**支持的 type 值**:
-
-- `sm_ms_cloud` - SM.MS 图床
-- `aliyun_cloud` - 阿里云 OSS
-- `qiniu_cloud` - 七牛云 Kodo
-- `tencent_cloud` - 腾讯云 COS
-- `baidu_cloud` - 百度云 BOS
-- `github` - GitHub 图床
-- `gitee` - Gitee 图床
-- `customize` - 自定义图床
-- `piclist` - PicList
-
-**请求示例**:
-
-```bash
-curl http://localhost:12345/setting/aliyun_cloud
+```
+[MIK 插件] → [Upload API] → [本地存储] → [预览访问]
 ```
 
-**响应示例**:
+直接运行示例代码，搭建简单的本地图床服务。适用于个人笔记、博客写作、内网文档系统。
 
+**方式二：中转服务**
+
+```
+[MIK 插件] → [Upload API] → [自定义逻辑] → [目标图床]
+                                ↓
+                        • 图片压缩
+                        • 添加水印
+                        • 格式转换
+                        • 权限控制
+```
+
+将 Upload API 作为中转层，在接收到文件后，再上传到其他图床。适用于需要图片预处理、统一多个图床接口、企业级应用。
+
+#### 设计优势
+
+**减轻 MIK 插件的复杂度**：插件不需要集成所有图床的 SDK 和逻辑，只需要调用统一的上传接口。用户可以自由选择后端实现，插件保持简洁和稳定。
+
+#### 详细文档
+
+- [Upload API 总览](upload-api/README.md)
+- [Java 实现文档](upload-api/java/README.md)
+
+---
+
+### Help API - 动态帮助文档服务
+
+#### 功能特性
+
+- ✅ 基于 Node.js 原生模块，零依赖
+- ✅ 配置文件热加载，每次请求自动刷新
+- ✅ 支持多种云存储平台的帮助文档链接
+- ✅ RESTful API 设计
+- ✅ CORS 支持
+- ✅ 轻量级单文件实现
+
+#### API 规范
+
+**帮助文档接口**: `GET /{where}/{type}`
+
+**请求**:
+```bash
+curl http://localhost:12346/setting/aliyun_cloud
+```
+
+**响应**:
 ```json
 {
   "code": "200",
@@ -398,244 +237,391 @@ curl http://localhost:12345/setting/aliyun_cloud
 }
 ```
 
+**健康检查**: `GET /health`
+
+#### 工作流程
+
+```
+[用户点击 Help 按钮]
+        ↓
+[MIK 插件] 组装 URL: /setting/{type}
+        ↓
+[网络请求] → [Help API]
+        ↓
+1. 重新加载 config.json
+2. 根据 type 查找对应的 URL
+3. 返回 JSON: {code: "200", url: "..."}
+        ↓
+[浏览器] 打开帮助文档
+```
+
+#### 配置热更新
+
+每次请求都会重新加载配置文件，实现了配置的热更新：
+
+```javascript
+function reloadConfig() {
+    const data = fs.readFileSync(CONFIG_PATH, 'utf8');
+    config = JSON.parse(data);
+}
+
+// 每次请求都调用
+reloadConfig();
+```
+
+**优势**：
+
+- ✅ 修改配置后立即生效，无需重启服务
+- ✅ 文档链接更新后，用户立即可见
+- ✅ 零停机时间
+- ✅ 适合频繁调整文档链接的场景
+
+#### 详细文档
+
+- [Help API 文档](help-api/README.md)
+
+## 📝 使用场景
+
+### 场景一：个人本地图床
+
+**需求**: 不想将图片上传到云端，希望保存在本地。
+
+**方案**:
+
+1. 运行 Upload API 在本机
+2. 设置上传路径到本地磁盘
+3. MIK 插件配置为 `http://localhost:12345/upload`
+
+**优点**: 完全离线、无隐私顾虑、零成本
+
+### 场景二：内网团队图床
+
+**需求**: 团队内部文档系统，图片存储在内网服务器。
+
+**方案**:
+
+1. 在内网服务器部署 Upload API
+2. 配置 NAS 或共享存储
+3. 团队成员配置内网地址
+
+**优点**: 团队共享、统一管理、内网安全
+
+### 场景三：自建图床中转
+
+**需求**: 使用非主流图床（如 MinIO、WebDAV），但 MIK 插件未内置支持。
+
+**方案**:
+
+1. 基于 Upload API 示例扩展
+2. 接收文件后调用目标图床 SDK
+3. 返回目标图床 URL
+
+**示例代码**:
+
+```java
+@RequestMapping("upload")
+public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file) {
+    // 上传到 MinIO
+    String url = minioClient.upload(file.getInputStream(), filename);
+    
+    // 返回 URL
+    return ResponseEntity.ok(Collections.singletonMap("data", 
+        Collections.singletonMap("url", url)));
+}
+```
+
+**优点**: 支持任意图床、可自定义处理、插件无需修改
+
+### 场景四：图片自动处理
+
+**需求**: 上传前自动压缩图片、添加水印。
+
+**方案**:
+
+1. 在 Upload API 中集成图片处理库
+2. 接收文件后进行处理
+3. 保存处理后的图片
+
+**优点**: 自动优化、减少存储、统一风格
+
+### 场景五：多环境帮助文档
+
+**需求**: 开发环境和生产环境使用不同的帮助文档。
+
+**方案**:
+
+1. 部署 Help API
+2. 不同环境配置不同的 `config.json`
+3. 修改配置后立即生效
+
+**优点**: 灵活配置、零停机更新、版本隔离
+
 ## 🚢 部署指南
 
-### 方式一：独立 JAR 部署
+### Upload API 部署
 
-1. **打包项目**
+#### Java 实现
 
+**打包**:
 ```bash
+cd upload-api/java
 mvn clean package
 ```
 
-生成的文件位于 `target/mik-help.zip`
-
-2. **上传到服务器并解压**
-
+**部署**:
 ```bash
-unzip mik-help.zip
-cd mik-help
-```
+# 解压部署包
+unzip target/mik-upload-api.zip
+cd mik-upload-api
 
-3. **修改配置**
+# 修改配置
+vim config/application.properties
 
-编辑 `config/application.properties`，设置上传路径和帮助文档 URL
-
-4. **启动服务**
-
-```bash
+# 启动服务
 chmod +x bin/server.sh
 ./bin/server.sh
 ```
 
-或者手动启动：
-
+**Docker 部署**:
 ```bash
-nohup java -jar \
-  --add-opens java.base/java.lang=ALL-UNNAMED \
-  -Dconfig.path=./config/ \
-  mik-help-0.0.1.jar \
-  --spring.config.location=./config/ &
-```
-
-### 方式二：Nginx 反向代理部署
-
-1. **安装 Nginx**
-
-```bash
-# Ubuntu/Debian
-sudo apt-get install nginx
-
-# CentOS/RHEL
-sudo yum install nginx
-```
-
-2. **配置 SSL 证书**（推荐使用 Let's Encrypt）
-
-```bash
-sudo certbot --nginx -d your-domain.com
-```
-
-3. **配置 Nginx**
-
-参考 `src/main/resources/nginx.conf`，创建配置文件：
-
-```bash
-sudo nano /etc/nginx/sites-available/mik-help
-```
-
-4. **启用配置并重启**
-
-```bash
-sudo ln -s /etc/nginx/sites-available/mik-help /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
-
-### 方式三：Docker 部署（推荐）
-
-创建 `Dockerfile`:
-
-```dockerfile
-FROM openjdk:8-jre-alpine
-WORKDIR /app
-COPY target/mik-help-0.0.1.jar app.jar
-COPY src/main/resources/application.properties config/application.properties
-EXPOSE 12345
-CMD ["java", "-jar", "-Dconfig.path=/app/config/", "app.jar"]
-```
-
-构建并运行：
-
-```bash
-docker build -t mik-help:latest .
-docker run -d -p 12345:12345 \
-  -v /path/to/config:/app/config \
+docker run -d \
+  --name mik-upload-api \
+  -p 12345:12345 \
   -v /path/to/uploads:/uploads \
-  --name mik-help \
-  mik-help:latest
+  -v /path/to/config:/app/config \
+  mik-upload-api:latest
 ```
 
-## ⚙️ 配置说明
+**详细说明**: 查看 [Java 实现部署文档](upload-api/java/README.md#部署指南)
 
-### application.properties 详解
+---
 
-```properties:1:39:mik-help/src/main/resources/application.properties
-# 主页 URL（默认返回）
-mik.url=https://mik.dong4j.site
+### Help API 部署
 
-# 各云存储平台的帮助文档链接
-mik.help.sm_ms_cloud=https://doc.sm.ms/
-mik.help.aliyun_cloud=https://help.aliyun.com/zh/oss/
-mik.help.qiniu_cloud=https://developer.qiniu.com/kodo/1233/console-quickstart
-mik.help.tencent_cloud=https://cloud.tencent.com/document/product/436/6224
-mik.help.baidu_cloud=https://cloud.baidu.com/doc/BOS/s/Ik4xtp41n
-mik.help.github=https://blog.csdn.net/qq_44231797/article/details/131658184
-mik.help.gitee=https://blog.csdn.net/qq_57581439/article/details/129251624
-mik.help.customize=https://github.com/dong4j/mik-help
-mik.help.piclist=https://piclist.cn/
+#### 使用 PM2（推荐）
 
-# 文件上传路径（需要有写入权限）
-web.upload-path=/Users/dong4j/Downloads/
+```bash
+# 安装 PM2
+npm install -g pm2
 
-# 服务端口
-server.port=12345
+# 启动服务
+cd help-api
+pm2 start index.js --name mik-help-api
+
+# 开机自启
+pm2 startup
+pm2 save
 ```
 
-### 配置热更新原理
+#### 使用 Systemd
 
-- ✅ 每次请求自动重新加载配置文件
-- ✅ 修改配置后立即生效，无需重启服务
-- ✅ 适合频繁调整帮助文档链接的场景
+创建服务文件 `/etc/systemd/system/mik-help-api.service`：
 
-### 安全建议
+```ini
+[Unit]
+Description=MIK Help API Service
+After=network.target
 
-⚠️ **生产环境注意事项**：
+[Service]
+Type=simple
+User=your-user
+WorkingDirectory=/path/to/help-api
+Environment="PORT=12346"
+ExecStart=/usr/bin/node /path/to/help-api/index.js
+Restart=on-failure
 
-1. **文件上传**：
-    - 限制上传文件大小
-    - 验证文件类型
-    - 添加访问频率限制
-    - 使用 CDN 加速访问
-
-2. **配置文件**：
-    - 设置适当的文件权限（600）
-    - 不要将敏感信息写入配置
-    - 定期备份配置文件
-
-3. **网络安全**：
-    - 使用 HTTPS（SSL/TLS）
-    - 配置防火墙规则
-    - 启用 Nginx 访问日志
-    - 添加 API 访问认证（可选）
-
-## 🔧 开发指南
-
-### 添加新的帮助文档链接
-
-1. 在 `application.properties` 中添加新配置：
-
-```properties
-mik.help.new_platform=https://new-platform.com/docs
+[Install]
+WantedBy=multi-user.target
 ```
 
-2. 在插件端使用新的 type：
+启动服务：
 
-```java
-String url = "https://mik.dong4j.site/setting/new_platform";
+```bash
+sudo systemctl start mik-help-api
+sudo systemctl enable mik-help-api
 ```
 
-### 自定义响应格式
+**详细说明**: 查看 [Help API 部署文档](help-api/README.md#部署指南)
 
-修改 `HelpApplication.java` 中的响应结构：
+---
 
-```java
-@RequestMapping("/{where}/{type}")
-public Map<String, Object> helpUrl(@PathVariable("where") String where, 
-                                   @PathVariable("type") String type) {
-    Map<String, Object> result = new HashMap<>();
-    reload();
+### 生产环境建议
+
+#### Nginx 反向代理
+
+配置 Nginx 提供 HTTPS 支持和负载均衡：
+
+```nginx
+# HTTP 重定向到 HTTPS
+server {
+    listen 80;
+    server_name mik.example.com;
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS 服务
+server {
+    listen 443 ssl http2;
+    server_name mik.example.com;
     
-    result.put("code", "200");
-    result.put("url", properties.getProperty("mik.help." + type));
-    result.put("timestamp", System.currentTimeMillis());
-    // 添加更多自定义字段
+    ssl_certificate /etc/nginx/ssl/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
     
-    return result;
+    # Upload API
+    location /upload {
+        proxy_pass http://localhost:12345;
+        proxy_set_header Host $host;
+        client_max_body_size 10M;
+    }
+    
+    # Upload API 预览
+    location /archive {
+        proxy_pass http://localhost:12345;
+    }
+    
+    # Help API
+    location /setting {
+        proxy_pass http://localhost:12346;
+        proxy_set_header Host $host;
+    }
+    
+    location /health {
+        proxy_pass http://localhost:12346;
+    }
 }
 ```
 
-### 扩展文件上传功能
+#### 安全建议
 
-可以在 `FileController.java` 中添加更多功能：
+**Upload API**:
 
-- 图片压缩
-- 格式转换
-- 水印添加
-- 文件加密
-- 访问统计
+- ✅ 限制上传文件大小
+- ✅ 验证文件类型
+- ✅ 添加访问频率限制
+- ✅ 使用 CDN 加速访问
+- ✅ 定期备份上传的文件
 
-## 📝 使用场景
+**Help API**:
 
-### 场景一：团队内部图床
+- ✅ 设置配置文件权限（600）
+- ✅ 启用 HTTPS
+- ✅ 配置防火墙规则
+- ✅ 监控服务状态
 
-适合团队搭建内部图床服务，统一管理文档图片：
+**通用建议**:
 
-1. 部署 mik-help 服务到内网服务器
-2. 配置 `web.upload-path` 到共享存储
-3. 团队成员在 IDE 中配置自定义图床
-4. 实现团队文档图片统一管理
+- ✅ 使用 SSL/TLS 加密
+- ✅ 启用访问日志
+- ✅ 定期更新依赖
+- ✅ 配置监控和告警
 
-### 场景二：个人博客图床
+## 🔧 扩展开发
 
-作为个人博客的图片存储方案：
+### Upload API 扩展
 
-1. 部署到个人 VPS/云服务器
-2. 配合 Nginx 实现 HTTPS 访问
-3. 结合 Markdown Image Kit 插件快速上传
-4. 提升写作效率
+#### 添加图片压缩
 
-### 场景三：多环境帮助文档
+Java 示例（使用 Thumbnailator）:
 
-为不同环境提供不同的帮助文档：
+```java
+Thumbnails.of(file.getInputStream())
+    .size(1920, 1080)
+    .outputQuality(0.8)
+    .toFile(targetFile);
+```
 
-```properties
-# 开发环境
-mik.help.aliyun_cloud=http://dev-docs.example.com/aliyun
+#### 上传到云存储
 
-# 生产环境
-mik.help.aliyun_cloud=https://docs.example.com/aliyun
+Java 示例（阿里云 OSS）:
+
+```java
+OSSClient ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+PutObjectResult result = ossClient.putObject(bucketName, objectName, inputStream);
+String url = "https://" + bucketName + "." + endpoint + "/" + objectName;
+```
+
+#### 添加访问控制
+
+```java
+@RequestMapping("upload")
+public ResponseEntity<?> upload(@RequestHeader("Authorization") String token,
+                                @RequestParam("fileName") MultipartFile file) {
+    if (!isValidToken(token)) {
+        return ResponseEntity.status(401).body("Unauthorized");
+    }
+    // 处理上传...
+}
+```
+
+### Help API 扩展
+
+#### 添加新的帮助文档类型
+
+编辑 `config.json`：
+
+```json
+{
+  "help": {
+    "new_platform": "https://new-platform.com/docs"
+  }
+}
+```
+
+无需重启服务，配置立即生效！
+
+#### 添加访问统计
+
+```javascript
+const stats = {};
+
+function recordAccess(type) {
+    stats[type] = (stats[type] || 0) + 1;
+}
+
+// 添加统计接口
+if (pathname === '/stats') {
+    res.end(JSON.stringify(stats));
+}
 ```
 
 ## 🤝 贡献指南
 
-欢迎贡献代码、报告问题或提出改进建议！
+我们欢迎各种形式的贡献！
+
+### 贡献 Upload API 的新语言实现
+
+如果您想贡献新的语言实现，请遵循以下规范：
+
+1. **遵循 API 规范**：确保接口格式与现有实现一致
+2. **简洁实现**：使用语言的标准框架，代码简洁易懂
+3. **完整文档**：提供独立的 README 和运行说明
+4. **测试验证**：确保上传和预览功能正常工作
+
+**目录结构**:
+
+```
+upload-api/
+├── {language}/
+│   ├── README.md
+│   ├── src/
+│   └── config/
+```
+
+### 提交流程
 
 1. Fork 本仓库
 2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 开启 Pull Request
+
+### 欢迎的贡献类型
+
+- 🌍 Upload API 的新语言实现（Node.js、Python、Go、PHP 等）
+- 📝 文档改进和翻译
+- 🐛 Bug 修复
+- ✨ 新功能建议
+- 🎨 代码优化
 
 ## 📄 许可证
 
@@ -644,7 +630,8 @@ mik.help.aliyun_cloud=https://docs.example.com/aliyun
 ## 🔗 相关链接
 
 - [Markdown Image Kit 插件](https://github.com/dong4j/markdown-image-kit)
-- [插件文档站点](https://mik.dong4j.site)
+- [Upload API 文档](upload-api/README.md)
+- [Help API 文档](help-api/README.md)
 - [问题反馈](https://github.com/dong4j/mik-help/issues)
 
 ## 👤 作者
@@ -661,4 +648,3 @@ mik.help.aliyun_cloud=https://docs.example.com/aliyun
 ---
 
 如果这个项目对你有帮助，请给一个 ⭐️ Star 支持一下！
-

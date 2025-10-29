@@ -1,0 +1,21 @@
+{
+  "name": "mik-help-api",
+  "version": "1.0.0",
+  "description": "MIK Help API - 为 Markdown Image Kit 插件提供动态帮助文档服务",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "mik",
+    "markdown-image-kit",
+    "help-api"
+  ],
+  "author": "dong4j <dong4j@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}
+
