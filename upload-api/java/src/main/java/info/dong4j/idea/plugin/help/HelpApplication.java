@@ -31,7 +31,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -50,7 +51,7 @@ import java.util.Properties;
 @SpringBootApplication
 public class HelpApplication {
     /** properties */
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
     /**
      * Help url map
@@ -59,11 +60,19 @@ public class HelpApplication {
      * @return the map
      * @since 1.0.0
      */
-    @RequestMapping("/mik/help/{where}")
-    public Map<String, String> helpUrl(@PathVariable("where") String where) {
+    @RequestMapping("/{where}/{type}")
+    public Map<String, String> helpUrl(@PathVariable("where") String where, @PathVariable("type") String type) {
         Map<String, String> result = new HashMap<>(2);
-        // todo-dong4j : (2019年03月25日 14:39) [处理 where]
         reload();
+
+        if ("setting".equals(where)) {
+            // todo-dong4j : (2025.10.30 00:35) [后面完成文档的时候, 直接用一个 url, 使用锚点直接跳转, 意思是直接返回 where]
+            String propertyKey = "mik.help." + type;
+            result.put("code", "200");
+            result.put("url", properties.getProperty(propertyKey, properties.getProperty("mik.url")));
+            return result;
+        }
+        // 对于非 setting 类型或格式不正确的请求，返回默认 URL
         result.put("code", "200");
         result.put("url", properties.getProperty("mik.url"));
         return result;
@@ -89,8 +98,7 @@ public class HelpApplication {
         try {
             String configPath = System.getProperty("config.path");
             properties.load(new FileReader(configPath + "application.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
     }
 }

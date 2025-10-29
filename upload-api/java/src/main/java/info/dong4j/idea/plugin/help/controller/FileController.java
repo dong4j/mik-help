@@ -1,7 +1,6 @@
 package info.dong4j.idea.plugin.help.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,9 +57,9 @@ public class FileController {
             file.transferTo(file1);
             final String urlPath =
                 request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/archive/" + suffix + newFileName;
-            return ResponseEntity.ok(new HashMap<String, Object>(2){
+            return ResponseEntity.ok(new HashMap<String, Object>(2) {
                 {
-                    put("data", new HashMap<String, String>(){
+                    put("data", new HashMap<String, String>() {
                         {
                             put("url", urlPath);
                         }

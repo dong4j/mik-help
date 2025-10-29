@@ -30,7 +30,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>info.dong4j</groupId>
-    <artifactId>mik-help</artifactId>
+    <artifactId>mik-upload-api</artifactId>
     <version>0.0.1</version>
 
 
@@ -105,7 +105,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>${start-class}</mainClass>
+                            <mainClass>info.dong4j.idea.plugin.help.HelpApplication</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <!-- 将 lib 增加到构建路径 -->
