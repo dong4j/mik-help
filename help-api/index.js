@@ -139,7 +139,7 @@ server.listen(PORT, () => {
 ║        MIK Help API - 动态帮助文档服务                      ║
 ║                                                            ║
 ║        服务已启动: http://localhost:${PORT}                ║
-║        配置文件: ${CONFIG_PATH}     ║
+║        配置文件: ./config.json     ║
 ║                                                            ║
 ║        健康检查: http://localhost:${PORT}/health          ║
 ║        API 格式: http://localhost:${PORT}/{where}/{type}  ║

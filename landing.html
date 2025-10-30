@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Image Kit - 最强大的 Markdown 图片管理插件</title>
+    <title>Markdown Image Kit - 最强大的 Markdown 图片管理插件 | JetBrains IDE</title>
+    <meta name="description" content="Markdown Image Kit 是一款专为 JetBrains IDE 设计的 Markdown 图片管理插件，支持一键上传、图床迁移、剪贴板监听等强大功能。">
+    <meta name="keywords" content="Markdown, Image, JetBrains, IDEA, Plugin, 图床, PicList, PicGo">
     <style>
         * {
             margin: 0;
@@ -16,6 +18,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #333;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
@@ -37,9 +40,18 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .header p {
+        .header .subtitle {
             font-size: 1.3rem;
             opacity: 0.95;
+            margin-bottom: 10px;
+        }
+
+        .header .description {
+            font-size: 1rem;
+            opacity: 0.85;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
         }
 
         .badges {
@@ -58,6 +70,12 @@
             font-size: 0.9rem;
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
         }
 
         .features {
@@ -177,6 +195,177 @@
             opacity: 0.9;
         }
 
+        .ide-support {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 30px;
+            border-radius: 20px;
+            margin: 50px 0;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .ide-support h2 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .ide-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .ide-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .ide-item:hover {
+            background: #e9ecef;
+            transform: translateY(-5px);
+        }
+
+        .ide-item .ide-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .ide-item .ide-name {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .steps-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 30px;
+            border-radius: 20px;
+            margin: 50px 0;
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        .steps-section h2 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 30px 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step-card h3 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .highlight-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 30px;
+            border-radius: 20px;
+            margin: 50px 0;
+            animation: fadeInUp 1.6s ease-out;
+        }
+
+        .highlight-section h2 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .highlight-section .subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .highlight-content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .highlight-content h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .highlight-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .highlight-content li {
+            padding: 10px 0;
+            color: #6c757d;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .highlight-content li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        }
+
         .footer {
             text-align: center;
             color: white;
@@ -195,6 +384,7 @@
 
         .footer a:hover {
             opacity: 1;
+            text-decoration: underline;
         }
 
         @keyframes fadeInDown {
@@ -233,12 +423,32 @@
                 font-size: 2.5rem;
             }
 
-            .header p {
+            .header .subtitle {
                 font-size: 1rem;
+            }
+
+            .header .description {
+                font-size: 0.9rem;
             }
 
             .features {
                 grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .ide-list {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
             }
         }
     </style>
@@ -247,12 +457,17 @@
 <div class="container">
     <div class="header">
         <h1>🖼️ Markdown Image Kit</h1>
-        <p>在 IDEA 中高效管理 Markdown 图片 | 2.0.0 全新版本</p>
+        <p class="subtitle">在 JetBrains IDE 中高效管理 Markdown 图片 | 2.0.0 全新版本</p>
+        <p class="description">专为 JetBrains 全系列 IDE 设计的 Markdown 图片管理插件，让你在 IDE 中优雅地处理 Markdown
+            文档中的图片。支持一键上传、剪贴板监听、图床迁移、批量处理等强大功能。</p>
         <div class="badges">
             <span class="badge">✨ 一键上传</span>
             <span class="badge">📦 批量处理</span>
-            <span class="badge">🔒 安全可靠</span>
+            <span class="badge">🔄 图床迁移</span>
+            <span class="badge">📋 剪贴板监听</span>
+            <span class="badge">🖼️ 图片压缩</span>
             <span class="badge">⚡ 异步处理</span>
+            <span class="badge">🔒 安全可靠</span>
         </div>
     </div>
 
@@ -291,16 +506,107 @@
 
     <div class="stats">
         <div class="stat-card">
-            <h3>10+</h3>
+            <h3>🌐 20+</h3>
             <p>图床支持</p>
         </div>
         <div class="stat-card">
-            <h3>⭐ 500+</h3>
-            <p>GitHub Stars</p>
+            <h3>⭐ 20K+</h3>
+            <p>Downloads</p>
         </div>
         <div class="stat-card">
-            <h3>2.0.0</h3>
+            <h3>🚀 2.0.0</h3>
             <p>最新版本</p>
+        </div>
+        <div class="stat-card">
+            <h3>💻 10+</h3>
+            <p>支持的 IDE</p>
+        </div>
+    </div>
+
+    <div class="steps-section">
+        <h2>📚 快速开始</h2>
+        <div class="steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>安装插件</h3>
+                <p>在 IDE 的插件市场搜索 "Markdown Image Kit"，或者直接下载 zip 包离线安装</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>配置图床</h3>
+                <p>在设置中配置你喜欢的图床（推荐使用 PicList），或者配置直连 OSS</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>开始使用</h3>
+                <p>复制图片后直接粘贴，或者右键选择上传选项，即可自动上传并插入 Markdown 链接</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>高级功能</h3>
+                <p>使用批量上传、图床迁移等高级功能，提升你的 Markdown 写作效率</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ide-support">
+        <h2>🎮 支持的 IDE (2022.3+)</h2>
+        <div class="ide-list">
+            <div class="ide-item">
+                <div class="ide-icon">💡</div>
+                <div class="ide-name">IntelliJ IDEA</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">🐍</div>
+                <div class="ide-name">PyCharm</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">⚡</div>
+                <div class="ide-name">WebStorm</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">🐘</div>
+                <div class="ide-name">PhpStorm</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">🔷</div>
+                <div class="ide-name">GoLand</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">🎯</div>
+                <div class="ide-name">Rider</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">🔧</div>
+                <div class="ide-name">CLion</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">💎</div>
+                <div class="ide-name">RubyMine</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">🗄️</div>
+                <div class="ide-name">DataGrip</div>
+            </div>
+            <div class="ide-item">
+                <div class="ide-icon">📱</div>
+                <div class="ide-name">Android Studio</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight-section">
+        <h2>🌟 2.0 版本亮点</h2>
+        <p class="subtitle">从 OSS 直连到第三方工具对接的演进</p>
+        <div class="highlight-content">
+            <h3>🔄 新的集成策略</h3>
+            <ul>
+                <li><strong>插件更轻量</strong> - 不再需要集成各种云服务 SDK，减少插件体积</li>
+                <li><strong>支持更广泛</strong> - 通过 PicList/PicGo 支持 20+ 种图床，覆盖几乎所有主流服务</li>
+                <li><strong>配置更灵活</strong> - 图床配置在第三方工具中管理，更加直观和易用</li>
+                <li><strong>职责更清晰</strong> - 插件专注于 Markdown 图片标签处理，图床管理交给专业工具</li>
+                <li><strong>无缝兼容</strong> - 保留对常用图床的直接支持，同时推荐使用第三方工具获得最佳体验</li>
+            </ul>
         </div>
     </div>
 
@@ -312,6 +618,11 @@
             </a>
             <a href="https://github.com/dong4j/markdown-image-kit" class="btn btn-secondary">
                 ⭐ 在 GitHub 上查看
+            </a>
+        </div>
+        <div class="buttons" style="margin-top: 20px;">
+            <a href="https://mik.dong4j.site/mik.zip" class="btn btn-download">
+                💾 直接下载插件 ZIP 包（离线安装）
             </a>
         </div>
     </div>
