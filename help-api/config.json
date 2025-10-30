@@ -1,7 +1,7 @@
 {
   "defaultUrl": "https://mik.dong4j.site",
   "help": {
-    "sm_ms_cloud": "https://doc.sm.ms/",
+    "sm_ms_cloud": "https://doc.sm.ms/#api-Image-Upload",
     "aliyun_cloud": "https://help.aliyun.com/zh/oss/",
     "qiniu_cloud": "https://developer.qiniu.com/kodo/1233/console-quickstart",
     "tencent_cloud": "https://cloud.tencent.com/document/product/436/6224",
