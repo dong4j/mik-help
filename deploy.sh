@@ -67,7 +67,7 @@ echo "================================"
 if [ "$PUBLISH_PLUGIN" = true ]; then
     echo "[1/3] 执行 Gradle 发布插件 ..."
     cd "$PROJECT_DIR"
-    ./gradlew publishPlugin --no-daemon
+    ./gradlew clean publishPlugin --no-daemon
     echo "✓ 插件发布完成"
 fi
 
