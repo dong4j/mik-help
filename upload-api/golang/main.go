@@ -56,7 +56,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 获取文件
-	file, handler, err := r.FormFile("fileName")
+	file, handler, err := r.FormFile("filename")
 	if err != nil {
 		http.Error(w, "Failed to get file", http.StatusBadRequest)
 		return

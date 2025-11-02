@@ -72,7 +72,7 @@ mvn clean spring-boot:run
 
 ```bash
 curl -X POST http://localhost:12345/upload \
-  -F "fileName=@/path/to/image.png"
+  -F "filename=@/path/to/image.png"
 ```
 
 预览图片（使用返回的 URL）：
@@ -118,13 +118,13 @@ spring.servlet.multipart.max-request-size=10MB
 
 | 参数名      | 类型   | 必填 | 说明     |
 |----------|------|----|--------|
-| fileName | File | 是  | 要上传的文件 |
+| filename | File | 是  | 要上传的文件 |
 
 **请求示例**:
 
 ```bash
 curl -X POST http://localhost:12345/upload \
-  -F "fileName=@/path/to/image.png"
+  -F "filename=@/path/to/image.png"
 ```
 
 **成功响应** (200):
@@ -301,7 +301,7 @@ public class FileController {
     private String path;
     
     @RequestMapping("upload")
-    public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file,
+    public ResponseEntity<?> upload(@RequestParam("filename") MultipartFile file,
                                     HttpServletRequest request) {
         // 1. 验证文件
         Assert.isTrue(!file.isEmpty(), "文件为空");
@@ -359,7 +359,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 ```java
 @RequestMapping("upload")
-public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file) {
+public ResponseEntity<?> upload(@RequestParam("filename") MultipartFile file) {
     // 验证文件类型
     String contentType = file.getContentType();
     if (!contentType.startsWith("image/")) {
@@ -423,7 +423,7 @@ private String accessKeySecret;
 private String bucketName;
 
 @RequestMapping("upload")
-public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file) {
+public ResponseEntity<?> upload(@RequestParam("filename") MultipartFile file) {
     // 创建 OSSClient
     OSS ossClient = new OSSClientBuilder()
         .build(endpoint, accessKeyId, accessKeySecret);
@@ -459,7 +459,7 @@ import org.slf4j.LoggerFactory;
 private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
 @RequestMapping("upload")
-public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file,
+public ResponseEntity<?> upload(@RequestParam("filename") MultipartFile file,
                                 HttpServletRequest request) {
     String clientIp = request.getRemoteAddr();
     logger.info("收到上传请求 - IP: {}, 文件: {}, 大小: {} bytes", 

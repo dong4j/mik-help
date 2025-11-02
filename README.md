@@ -111,7 +111,7 @@ mvn clean spring-boot:run
 
 # 4. 测试上传
 curl -X POST http://localhost:12345/upload \
-  -F "fileName=@/path/to/image.png"
+  -F "filename=@/path/to/image.png"
 
 # 5. 在浏览器中打开返回的 URL 预览图片
 ```
@@ -122,7 +122,7 @@ curl -X POST http://localhost:12345/upload \
 2. 选择 `自定义` 图床
 3. 配置：
     - URL: `http://localhost:12345/upload`
-    - 参数名: `fileName`
+   - 参数名: `filename`
     - JSON Path: `data.url`
 
 ### Help API - 快速体验
@@ -161,7 +161,7 @@ curl http://localhost:12346/setting/aliyun_cloud
 **请求**:
 ```bash
 curl -X POST http://localhost:12345/upload \
-  -F "fileName=@/path/to/image.png"
+  -F "filename=@/path/to/image.png"
 ```
 
 **响应**:
@@ -320,7 +320,7 @@ reloadConfig();
 
 ```java
 @RequestMapping("upload")
-public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file) {
+public ResponseEntity<?> upload(@RequestParam("filename") MultipartFile file) {
     // 上传到 MinIO
     String url = minioClient.upload(file.getInputStream(), filename);
     
@@ -545,7 +545,7 @@ String url = "https://" + bucketName + "." + endpoint + "/" + objectName;
 ```java
 @RequestMapping("upload")
 public ResponseEntity<?> upload(@RequestHeader("Authorization") String token,
-                                @RequestParam("fileName") MultipartFile file) {
+                                @RequestParam("filename") MultipartFile file) {
     if (!isValidToken(token)) {
         return ResponseEntity.status(401).body("Unauthorized");
     }

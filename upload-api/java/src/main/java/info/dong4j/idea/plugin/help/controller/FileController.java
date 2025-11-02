@@ -35,7 +35,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     public ResponseEntity<Map<String, Object>> upload(
-        @RequestParam("fileName") MultipartFile file,
+        @RequestParam("filename") MultipartFile file,
         HttpServletRequest request) {
         
         Assert.isTrue(!file.isEmpty(), "文件为空");

@@ -48,19 +48,19 @@ const upload = multer({
 /**
  * 文件上传接口
  */
-app.post('/upload', upload.single('fileName'), (req, res) => {
+app.post('/upload', upload.single('filename'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({error: '没有文件'});
   }
 
   // 获取文件扩展名
   const ext = path.extname(req.file.originalname).slice(1);
-  const fileName = req.file.filename;
+  const filename = req.file.filename;
 
   // 生成访问 URL
   const protocol = req.protocol;
   const host = req.get('host');
-  const urlPath = `${protocol}://${host}/archive/${ext}/${fileName}`;
+  const urlPath = `${protocol}://${host}/archive/${ext}/${filename}`;
 
   res.json({
              data: {

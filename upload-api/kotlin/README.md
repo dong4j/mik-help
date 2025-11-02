@@ -35,7 +35,7 @@ java -jar build/libs/mik-upload-api-1.0.0.jar
 ```bash
 # 上传文件
 curl -X POST http://localhost:12345/upload \
-  -F "fileName=@/path/to/image.png"
+  -F "filename=@/path/to/image.png"
 
 # 访问返回的 URL 预览图片
 ```
@@ -120,7 +120,7 @@ docker run -d -p 12345:12345 -v /path/to/uploads:/app/uploads mik-upload-api
 
 **请求**: `multipart/form-data`
 
-**参数**: `fileName` - 文件
+**参数**: `filename` - 文件
 
 **响应**:
 

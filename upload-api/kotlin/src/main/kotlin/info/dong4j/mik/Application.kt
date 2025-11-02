@@ -39,13 +39,13 @@ fun Application.configureRouting() {
         // 文件上传接口
         post("/upload") {
             val multipart = call.receiveMultipart()
-            var fileName = ""
+            var filename = ""
             var fileBytes: ByteArray? = null
 
             multipart.forEachPart { part ->
                 when (part) {
                     is PartData.FileItem -> {
-                        fileName = part.originalFileName as String
+                        filename = part.originalFileName as String
                         fileBytes = part.streamProvider().readBytes()
                     }
 
@@ -54,13 +54,13 @@ fun Application.configureRouting() {
                 part.dispose()
             }
 
-            if (fileBytes == null || fileName.isEmpty()) {
+            if (fileBytes == null || filename.isEmpty()) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to "文件为空"))
                 return@post
             }
 
             // 获取文件扩展名
-            val ext = File(fileName).extension
+            val ext = File(filename).extension
             if (ext.isEmpty()) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to "无效的文件扩展名"))
                 return@post
@@ -72,8 +72,8 @@ fun Application.configureRouting() {
 
             // 生成唯一文件名
             val timestamp = System.currentTimeMillis()
-            val newFileName = "$timestamp$fileName"
-            val filePath = File(extDir, newFileName)
+            val newFilename = "$timestamp$filename"
+            val filePath = File(extDir, newFilename)
 
             // 保存文件
             filePath.writeBytes(fileBytes!!)
@@ -82,7 +82,7 @@ fun Application.configureRouting() {
             val scheme = call.request.origin.scheme
             val host = call.request.host()
             val port = call.request.port()
-            val urlPath = "$scheme://$host:$port/archive/$ext/$newFileName"
+            val urlPath = "$scheme://$host:$port/archive/$ext/$newFilename"
 
             val response = UploadResponse(
                 data = UrlData(url = urlPath)

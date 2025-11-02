@@ -30,14 +30,14 @@ def upload_file():
     文件上传接口
     
     接收 multipart/form-data 格式的文件上传请求
-    参数: fileName - 上传的文件
+    参数: filename - 上传的文件
     返回: JSON 格式的文件访问 URL
     """
     # 检查是否有文件
-    if 'fileName' not in request.files:
+    if 'filename' not in request.files:
         return jsonify({'error': '没有文件'}), 400
     
-    file = request.files['fileName']
+    file = request.files['filename']
     
     # 检查文件是否为空
     if file.filename == '':

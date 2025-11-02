@@ -268,7 +268,7 @@ cd kotlin
 
 ```bash
 curl -X POST http://localhost:12345/upload \
-  -F "fileName=@/path/to/image.png"
+  -F "filename=@/path/to/image.png"
 ```
 
 ### 配置 MIK 插件
@@ -277,7 +277,7 @@ curl -X POST http://localhost:12345/upload \
 2. 选择 `自定义` 图床
 3. 配置：
     - URL: `http://localhost:12345/upload`
-    - 参数名: `fileName`
+   - 参数名: `filename`
     - JSON Path: `data.url`
 
 ### 语言选择建议
@@ -303,13 +303,13 @@ curl -X POST http://localhost:12345/upload \
 
 | 参数名      | 类型   | 必填 | 说明     |
 |----------|------|----|--------|
-| fileName | File | 是  | 要上传的文件 |
+| filename | File | 是  | 要上传的文件 |
 
 **请求示例**:
 
 ```bash
 curl -X POST http://localhost:12345/upload \
-  -F "fileName=@/path/to/image.png"
+  -F "filename=@/path/to/image.png"
 ```
 
 **响应格式**: `application/json`
@@ -425,7 +425,7 @@ upload-path/
 
 ```java
 @RequestMapping("upload")
-public ResponseEntity<?> upload(@RequestParam("fileName") MultipartFile file) {
+public ResponseEntity<?> upload(@RequestParam("filename") MultipartFile file) {
     // 1. 接收文件
     String originalFilename = file.getOriginalFilename();
     
@@ -508,7 +508,7 @@ String url = "https://" + bucketName + "." + endpoint + "/" + objectName;
 ```java
 @RequestMapping("upload")
 public ResponseEntity<?> upload(@RequestHeader("Authorization") String token,
-                                @RequestParam("fileName") MultipartFile file) {
+                                @RequestParam("filename") MultipartFile file) {
     // 验证 token
     if (!isValidToken(token)) {
         return ResponseEntity.status(401).body("Unauthorized");
