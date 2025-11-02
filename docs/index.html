@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Markdown Image Kit 用户手册</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="description" content="Markdown Image Kit 用户手册 - 专为 JetBrains IDE 设计的 Markdown 图片管理插件">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+    <!-- 主题样式 -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+
+    <!-- 自定义样式 -->
+    <style>
+        :root {
+            --theme-color: #42b983;
+            --theme-color-dark: #2c8d66;
+        }
+
+        /* 优化代码块样式 */
+        .markdown-section pre > code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        /* 优化表格样式 */
+        .markdown-section table {
+            display: table;
+            width: 100%;
+        }
+
+        /* 优化标题样式 */
+        .markdown-section h1 {
+            margin: 3rem 0 2rem;
+            font-size: 2rem;
+        }
+
+        .markdown-section h2 {
+            margin: 2.5rem 0 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        /* 侧边栏样式优化 */
+        .sidebar {
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-nav li {
+            margin: 6px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="app">加载中...</div>
+<script>
+  window.$docsify = {
+    // 文档标题
+    name: 'Markdown Image Kit',
+
+    // 仓库地址
+    repo: 'dong4j/markdown-image-kit',
+
+    // 主页文件
+    homepage: '用户手册.md',
+
+    // 加载侧边栏
+    loadSidebar: true,
+
+    // 自动生成侧边栏
+    subMaxLevel: 3,
+
+    // 启用封面页
+    coverpage: false,
+
+    // 小屏设备下合并导航栏到侧边栏
+    mergeNavbar: true,
+
+    // 自动跳转到页面顶部
+    auto2top: true,
+
+    // 搜索插件配置
+    search: {
+      maxAge: 86400000, // 过期时间，单位毫秒，默认一天
+      paths: 'auto',
+      placeholder: '🔍 搜索',
+      noData: '😞 没有找到结果',
+      depth: 4,
+      hideOtherSidebarContent: false,
+    },
+
+    // 分页导航插件
+    pagination: {
+      previousText: '上一页',
+      nextText: '下一页',
+      crossChapter: true,
+      crossChapterText: true,
+    },
+
+    // 字数统计
+    count: {
+      countable: true,
+      fontsize: '0.9em',
+      color: 'rgb(90,90,90)',
+      language: 'chinese'
+    },
+
+    // 代码复制插件
+    copyCode: {
+      buttonText: '复制',
+      errorText: '错误',
+      successText: '已复制'
+    },
+
+    // 外链打开方式
+    externalLinkTarget: '_blank',
+
+    // 404页面
+    notFoundPage: true,
+  }
+</script>
+
+<!-- Docsify 核心 -->
+<script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+
+<!-- 全文搜索插件 -->
+<script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+
+<!-- 代码高亮 -->
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-java.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-javascript.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-markdown.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+
+<!-- 代码复制插件 -->
+<script src="//cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
+
+<!-- 分页导航插件 -->
+<script src="//cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+
+<!-- Emoji 插件 -->
+<script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
+
+<!-- 图片缩放插件 -->
+<script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+
+<!-- 字数统计插件 -->
+<script src="//cdn.jsdelivr.net/npm/docsify-count@latest/dist/countable.min.js"></script>
+
+<!-- 外链脚本 - 用于统计等 -->
+<!-- <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/external-script.min.js"></script> -->
+</body>
+</html>
+

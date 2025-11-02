@@ -54,11 +54,37 @@
             line-height: 1.8;
         }
 
+        .doc-link {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .btn-doc {
+            display: inline-block;
+            padding: 12px 35px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-doc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            background: white;
+            border-color: white;
+        }
+
         .badges {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 25px;
             flex-wrap: wrap;
         }
 
@@ -457,9 +483,14 @@
 <div class="container">
     <div class="header">
         <h1>🖼️ Markdown Image Kit</h1>
-        <p class="subtitle">在 JetBrains IDE 中高效管理 Markdown 图片 | 2.0.0 全新版本</p>
+        <p class="subtitle">在 JetBrains IDE 中高效管理 Markdown 图片 | 2.1.0 全新版本</p>
         <p class="description">专为 JetBrains 全系列 IDE 设计的 Markdown 图片管理插件，让你在 IDE 中优雅地处理 Markdown
             文档中的图片。支持一键上传、剪贴板监听、图床迁移、批量处理等强大功能。</p>
+        <div class="doc-link">
+            <a href="https://mik.dong4j.site/guide" target="_blank" class="btn-doc">
+                📚 查看用户手册
+            </a>
+        </div>
         <div class="badges">
             <span class="badge">✨ 一键上传</span>
             <span class="badge">📦 批量处理</span>
@@ -514,7 +545,7 @@
             <p>Downloads</p>
         </div>
         <div class="stat-card">
-            <h3>🚀 2.0.0</h3>
+            <h3>🚀 2.1.0</h3>
             <p>最新版本</p>
         </div>
         <div class="stat-card">
@@ -613,22 +644,22 @@
     <div class="cta-section">
         <h2>🎉 现在就体验</h2>
         <div class="buttons">
-            <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" class="btn btn-primary">
+            <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" target="_blank" class="btn btn-primary">
                 📥 从 JetBrains Marketplace 下载
             </a>
             <a href="https://mik.dong4j.site/mik.zip" class="btn btn-download">
                 💾 直接下载插件 ZIP 包（离线安装）
             </a>
-            <a href="https://github.com/dong4j/markdown-image-kit" class="btn btn-secondary">
+            <a href="https://github.com/dong4j/markdown-image-kit" target="_blank" class="btn btn-secondary">
                 ⭐ 在 GitHub 上查看
             </a>
         </div>
     </div>
 
     <div class="footer">
-        <p>©2025 Markdown Image Kit | <a href="https://github.com/dong4j/markdown-image-kit">GitHub</a> |
-            <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit">Marketplace</a> |
-            <a href="https://github.com/dong4j/markdown-image-kit/issues">Issues</a></p>
+        <p>©2025 Markdown Image Kit | <a href="https://github.com/dong4j/markdown-image-kit" target="_blank">GitHub</a> |
+            <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" target="_blank">Marketplace</a> |
+            <a href="https://github.com/dong4j/markdown-image-kit/issues" target="_blank">Issues</a></p>
         <p style="margin-top: 15px; opacity: 0.8;">Made with ❤️ by dong4j</p>
     </div>
 </div>

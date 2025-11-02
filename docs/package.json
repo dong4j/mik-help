@@ -1,0 +1,21 @@
+{
+  "name": "mik-help-docs",
+  "version": "1.0.0",
+  "description": "Markdown Image Kit 用户手册文档",
+  "scripts": {
+    "dev": "docsify serve . --port 3000",
+    "serve": "docsify serve .",
+    "init": "docsify init ."
+  },
+  "keywords": [
+    "markdown",
+    "documentation",
+    "docsify"
+  ],
+  "author": "dong4j",
+  "license": "MIT",
+  "devDependencies": {
+    "docsify-cli": "^4.4.4"
+  }
+}
+

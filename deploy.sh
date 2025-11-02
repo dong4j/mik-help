@@ -6,11 +6,13 @@
 # 1) 执行 Gradle 的 publishPlugin 流程
 # 2) 将 build/distributions/markdown-image-kit-{version}.zip 重命名为 mik.zip 并上传到服务器
 # 3) 部署 landing.html 到服务器
+# 4) 部署用户手册文档 (docs 目录) 到服务器
 #
 # 用法:
-#   ./deploy.sh       - 执行完整流程（发布插件 + 上传 ZIP + 部署 Landing）
+#   ./deploy.sh       - 执行完整流程（发布插件 + 上传 ZIP + 部署 Landing + 部署文档）
 #   ./deploy.sh -l    - 仅部署 landing.html
 #   ./deploy.sh -z    - 仅上传 mik.zip（需要先构建）
+#   ./deploy.sh -d    - 仅部署用户手册文档
 
 set -e  # 遇到错误立即退出
 
@@ -21,15 +23,18 @@ PROJECT_DIR="$SCRIPT_DIR/../markdown-image-kit"
 REMOTE_HOST="aliyun"
 REMOTE_DIR="/var/www/mik-landing"
 REMOTE_LANDING_PATH="$REMOTE_DIR/landing.html"
+REMOTE_DOCS_DIR="/var/www/mik-docs"
 DEST_ZIP_NAME="mik.zip"
 
 ZIP_DIR="$PROJECT_DIR/build/distributions"
 LANDING_FILE="$SCRIPT_DIR/landing.html"
+DOCS_DIR="$SCRIPT_DIR/docs"
 
 # 默认执行所有步骤
 DEPLOY_LANDING=false
 UPLOAD_ZIP=false
 PUBLISH_PLUGIN=false
+DEPLOY_DOCS=false
 
 # 解析命令行参数
 if [ $# -eq 0 ]; then
@@ -37,8 +42,9 @@ if [ $# -eq 0 ]; then
     PUBLISH_PLUGIN=true
     UPLOAD_ZIP=true
     DEPLOY_LANDING=true
+    DEPLOY_DOCS=true
 else
-    while getopts "lz" opt; do
+    while getopts "lzd" opt; do
         case $opt in
             l)
                 DEPLOY_LANDING=true
@@ -46,10 +52,14 @@ else
             z)
                 UPLOAD_ZIP=true
                 ;;
+            d)
+                DEPLOY_DOCS=true
+                ;;
             *)
-                echo "用法: $0 [-l] [-z]"
+                echo "用法: $0 [-l] [-z] [-d]"
                 echo "  -l    仅部署 landing.html"
                 echo "  -z    仅上传 mik.zip"
+                echo "  -d    仅部署用户手册文档"
                 echo "  无参数 执行完整流程"
                 exit 1
                 ;;
@@ -65,7 +75,7 @@ echo "================================"
 # 1) 执行 Gradle publishPlugin
 ############################################
 if [ "$PUBLISH_PLUGIN" = true ]; then
-    echo "[1/3] 执行 Gradle 发布插件 ..."
+    echo "[1/4] 执行 Gradle 发布插件 ..."
     cd "$PROJECT_DIR"
     ./gradlew clean publishPlugin --no-daemon
     echo "✓ 插件发布完成"
@@ -75,7 +85,7 @@ fi
 # 2) 上传插件 ZIP 为 mik.zip 到服务器目录
 ############################################
 if [ "$UPLOAD_ZIP" = true ]; then
-    echo "[2/3] 查找构建产物 ZIP ..."
+    echo "[2/4] 查找构建产物 ZIP ..."
     if [ ! -d "$ZIP_DIR" ]; then
         echo "错误: 未找到构建目录 $ZIP_DIR，请确认构建是否成功"
         exit 1
@@ -103,7 +113,7 @@ fi
 # 3) 部署 landing.html
 ############################################
 if [ "$DEPLOY_LANDING" = true ]; then
-    echo "[3/3] 部署 Landing Page ..."
+    echo "[3/4] 部署 Landing Page ..."
 
     # 检查源文件是否存在
     if [ ! -f "$LANDING_FILE" ]; then
@@ -124,6 +134,38 @@ if [ "$DEPLOY_LANDING" = true ]; then
 fi
 
 ############################################
+# 4) 部署用户手册文档
+############################################
+if [ "$DEPLOY_DOCS" = true ]; then
+    echo "[4/4] 部署用户手册文档 ..."
+
+    # 检查源目录是否存在
+    if [ ! -d "$DOCS_DIR" ]; then
+        echo "错误: 找不到文档目录 $DOCS_DIR"
+        exit 1
+    fi
+
+    echo "✓ 源目录检查通过: $DOCS_DIR"
+    echo "正在上传文档到 $REMOTE_HOST:$REMOTE_DOCS_DIR ..."
+
+    # 创建远程目录（如果不存在）
+    ssh "$REMOTE_HOST" "mkdir -p $REMOTE_DOCS_DIR"
+
+    # 同步文档目录（排除 node_modules）
+    rsync -avz --progress \
+        --exclude 'node_modules' \
+        --exclude '.DS_Store' \
+        --exclude '*.log' \
+        --delete \
+        "$DOCS_DIR/" \
+        "$REMOTE_HOST:$REMOTE_DOCS_DIR/"
+
+    echo "设置文档目录权限..."
+    ssh "$REMOTE_HOST" "find $REMOTE_DOCS_DIR -type f -exec chmod 644 {} \; && find $REMOTE_DOCS_DIR -type d -exec chmod 755 {} \;"
+    echo "✓ 用户手册文档部署完成"
+fi
+
+############################################
 # 完成总结
 ############################################
 echo "================================"
@@ -133,8 +175,14 @@ if [ "$PUBLISH_PLUGIN" = true ]; then
 fi
 if [ "$UPLOAD_ZIP" = true ]; then
     echo "  - ZIP: $REMOTE_HOST:$REMOTE_DIR/$DEST_ZIP_NAME"
+    echo "  - 下载地址: https://mik.dong4j.site/mik.zip"
 fi
 if [ "$DEPLOY_LANDING" = true ]; then
     echo "  - HTML: $REMOTE_HOST:$REMOTE_LANDING_PATH"
+    echo "  - 访问地址: https://mik.dong4j.site/"
+fi
+if [ "$DEPLOY_DOCS" = true ]; then
+    echo "  - DOCS: $REMOTE_HOST:$REMOTE_DOCS_DIR"
+    echo "  - 访问地址: https://mik.dong4j.site/guide"
 fi
 echo "================================"
