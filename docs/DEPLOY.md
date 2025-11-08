@@ -131,7 +131,7 @@ sudo nginx -s reload
 访问以下 URL 检查部署是否成功：
 
 ```
-https://mik.dong4j.site/guide
+https://mik.dong4j.site/docs
 ```
 
 应该能看到用户手册的主页。

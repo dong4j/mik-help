@@ -183,6 +183,6 @@ if [ "$DEPLOY_LANDING" = true ]; then
 fi
 if [ "$DEPLOY_DOCS" = true ]; then
     echo "  - DOCS: $REMOTE_HOST:$REMOTE_DOCS_DIR"
-    echo "  - 访问地址: https://mik.dong4j.site/guide"
+    echo "  - 访问地址: https://mik.dong4j.site/docs"
 fi
 echo "================================"
