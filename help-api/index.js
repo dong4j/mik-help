@@ -83,7 +83,7 @@ const server = http.createServer((req, res) => {
     res.writeHead(200);
     res.end(JSON.stringify({
                              code: '200',
-                             url: config.defaultUrl || 'https://mik.dong4j.site'
+                             url: config.defaultUrl || 'https://mik.dong4j.site/docs.html'
                            }));
     return;
   }
@@ -118,7 +118,7 @@ const server = http.createServer((req, res) => {
       res.writeHead(200);
       res.end(JSON.stringify({
                                code: '200',
-                               url: config.defaultUrl || 'https://mik.dong4j.site'
+                               url: config.defaultUrl || 'https://mik.dong4j.site/docs.html'
                              }));
     }
   } else {
@@ -126,7 +126,7 @@ const server = http.createServer((req, res) => {
     res.writeHead(200);
     res.end(JSON.stringify({
                              code: '200',
-                             url: config.defaultUrl || 'https://mik.dong4j.site'
+                             url: config.defaultUrl || 'https://mik.dong4j.site/docs.html'
                            }));
   }
 });

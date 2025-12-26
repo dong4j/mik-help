@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg class="logo" viewBox="0 0 210 40" version="1.1" xmlns="http://www.w3.org/2000/svg" width="210" height="40">
+    <defs>
+        <!-- 红色渐变：从深红到亮红，与插件图标颜色一致 -->
+        <linearGradient id="redGradientLogo" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#B91C1C;stop-opacity:1"/>
+            <stop offset="50%" style="stop-color:#DC2626;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#EF4444;stop-opacity:1"/>
+        </linearGradient>
+        <!-- 橙色渐变：从深橙到亮橙 -->
+        <linearGradient id="orangeGradientLogo" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#EA580C;stop-opacity:1"/>
+            <stop offset="50%" style="stop-color:#F97316;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#FB923C;stop-opacity:1"/>
+        </linearGradient>
+        <!-- 文字渐变：从深红到橙色 -->
+        <linearGradient id="textGradientLogo" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#DC2626;stop-opacity:1"/>
+            <stop offset="50%" style="stop-color:#F97316;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#FB923C;stop-opacity:1"/>
+        </linearGradient>
+        <!-- 圆点渐变：绿色径向渐变，表示图片/媒体 -->
+        <radialGradient id="dotGradientLogo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#10B981;stop-opacity:1"/>
+            <stop offset="70%" style="stop-color:#059669;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#047857;stop-opacity:1"/>
+        </radialGradient>
+    </defs>
+    <!-- 图标部分（40x40）- 基于 pluginIcon.svg 的原始路径 -->
+    <g transform="translate(0, 0) scale(0.0390625)">
+        <!-- 使用 pluginIcon.svg 的原始路径，但应用渐变填充 -->
+        <path d="M128 128h768a42.667 42.667 0 0 1 42.667 42.667v682.666A42.667 42.667 0 0 1 896 896H128a42.667 42.667 0 0 1-42.667-42.667V170.667A42.667 42.667 0 0 1 128 128z m170.667 533.333V490.667L384 576l85.333-85.333v170.666h85.334V362.667h-85.334L384 448l-85.333-85.333h-85.334v298.666h85.334z m469.333-128V362.667h-85.333v170.666h-85.334l128 128 128-128H768z"
+              fill="url(#redGradientLogo)"/>
+    </g>
+    <!-- 右下角圆点，表示图片/媒体 -->
+    <circle cx="34" cy="32" r="3.0" fill="url(#dotGradientLogo)" stroke="#FFFFFF" stroke-width="0.3"/>
+    <!-- 文字部分：Markdown Image Kit，使用红橙渐变 -->
+    <text x="48" y="26" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="16" font-weight="700"
+          fill="url(#textGradientLogo)">Markdown Image Kit
+    </text>
+</svg>

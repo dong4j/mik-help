@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Console集成指南",
+    "path": "./docs/Console集成指南.md"
+  },
+  {
+    "name": "PicList macOS修复",
+    "path": "./docs/PicList macOS修复.md"
+  },
+  {
+    "name": "PicList剪贴板重试",
+    "path": "./docs/PicList剪贴板重试.md"
+  },
+  {
+    "name": "PicList命令行支持",
+    "path": "./docs/PicList命令行支持.md"
+  },
+  {
+    "name": "README_PersonalInfoPanel",
+    "path": "./docs/README_PersonalInfoPanel.md"
+  },
+  {
+    "name": "WebP上传修复",
+    "path": "./docs/WebP上传修复.md"
+  },
+  {
+    "name": "code-vision-vfs-refresh",
+    "path": "./docs/code-vision-vfs-refresh.md"
+  },
+  {
+    "name": "paste-image-action-not-triggered",
+    "path": "./docs/paste-image-action-not-triggered.md"
+  },
+  {
+    "name": "图片媒体类型使用示例",
+    "path": "./docs/图片媒体类型使用示例.md"
+  },
+  {
+    "name": "图片媒体类型重构",
+    "path": "./docs/图片媒体类型重构.md"
+  },
+  {
+    "name": "图片粘贴实现总结",
+    "path": "./docs/图片粘贴实现总结.md"
+  },
+  {
+    "name": "图片重命名用户指南",
+    "path": "./docs/图片重命名用户指南.md"
+  },
+  {
+    "name": "文件选择组件实现示例",
+    "path": "./docs/文件选择组件实现示例.md"
+  },
+  {
+    "name": "用户手册",
+    "path": "./docs/用户手册.md"
+  },
+  {
+    "name": "绝对路径修复",
+    "path": "./docs/绝对路径修复.md"
+  },
+  {
+    "name": "自定义OSS API规范",
+    "path": "./docs/自定义OSS API规范.md"
+  },
+  {
+    "name": "自定义OSS实现指南",
+    "path": "./docs/自定义OSS实现指南.md"
+  },
+  {
+    "name": "路径规范化修复",
+    "path": "./docs/路径规范化修复.md"
+  }
+]

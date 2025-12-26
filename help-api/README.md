@@ -68,7 +68,7 @@ cd help-api
 
 ```json
 {
-  "defaultUrl": "https://mik.dong4j.site",
+  "defaultUrl": "https://mik.dong4j.site/docs.html",
   "help": {
     "aliyun_cloud": "https://help.aliyun.com/zh/oss/",
     "qiniu_cloud": "https://developer.qiniu.com/kodo/1233/console-quickstart"
@@ -114,7 +114,7 @@ curl http://localhost:12346/setting/aliyun_cloud
 
 ```json
 {
-  "defaultUrl": "https://mik.dong4j.site",
+  "defaultUrl": "https://mik.dong4j.site/docs.html",
   "help": {
     "sm_ms_cloud": "https://doc.sm.ms/",
     "aliyun_cloud": "https://help.aliyun.com/zh/oss/",
@@ -221,7 +221,7 @@ curl http://localhost:12346/setting/aliyun_cloud
 ```json
 {
   "code": "200",
-  "url": "https://mik.dong4j.site"
+  "url": "https://mik.dong4j.site/docs.html"
 }
 ```
 
@@ -256,7 +256,7 @@ curl http://localhost:12346/health
 ```json
 {
   "code": "200",
-  "url": "https://mik.dong4j.site"
+  "url": "https://mik.dong4j.site/docs.html"
 }
 ```
 
@@ -465,7 +465,7 @@ server {
         ↓
 [MIK 插件] 组装请求 URL
         ↓
-GET https://mik.dong4j.site/setting/aliyun_cloud
+GET https://mik.dong4j.site/api/setting/aliyun_cloud
         ↓
 [Nginx 反向代理] :443 → :12346
         ↓
