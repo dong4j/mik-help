@@ -6,7 +6,26 @@
     <title>Markdown Image Kit - 最强大的 Markdown 图片管理插件 | JetBrains IDE</title>
     <meta name="description" content="Markdown Image Kit 是一款专为 JetBrains IDE 设计的 Markdown 图片管理插件，支持一键上传、图床迁移、剪贴板监听等强大功能。">
     <meta name="keywords" content="Markdown, Image, JetBrains, IDEA, Plugin, 图床, PicList, PicGo">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-1: #ffb072;
+            --bg-2: #ffd37a;
+            --bg-3: #ff7d5c;
+            --bg-4: #ffb86b;
+            --ink: #2a1b17;
+            --ink-soft: rgba(42, 27, 23, 0.72);
+            --surface: rgba(255, 255, 255, 0.16);
+            --surface-strong: rgba(255, 255, 255, 0.22);
+            --accent: #ff6b43;
+            --accent-dark: #e2542e;
+            --ring: rgba(255, 255, 255, 0.6);
+            --shadow: 0 20px 50px rgba(42, 27, 23, 0.18);
+            --glass-border: rgba(255, 255, 255, 0.35);
+            --glow: rgba(255, 180, 120, 0.45);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,417 +33,425 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
+            font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--ink);
             line-height: 1.6;
+            background: linear-gradient(120deg, var(--bg-1), var(--bg-2), var(--bg-3), var(--bg-4));
+            background-size: 300% 300%;
+            animation: gradientShift 16s ease infinite;
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 55vmax;
+            height: 55vmax;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            background: radial-gradient(circle, rgba(255, 228, 155, 0.9), transparent 60%);
+            top: -20vmax;
+            left: -15vmax;
+            animation: floatGlow 12s ease-in-out infinite;
+        }
+
+        body::after {
+            background: radial-gradient(circle, rgba(255, 132, 103, 0.8), transparent 60%);
+            bottom: -25vmax;
+            right: -10vmax;
+            animation: floatGlow 16s ease-in-out infinite reverse;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+        }
+
         .container {
-            max-width: 1200px;
+            max-width: 1160px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 48px 20px 72px;
         }
 
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 60px;
-            animation: fadeInDown 1s ease-out;
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 46px;
         }
 
-        .header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        .brand {
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            color: var(--ink);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .header .subtitle {
-            font-size: 1.3rem;
-            opacity: 0.95;
-            margin-bottom: 10px;
+        .brand img {
+            width: 360px;
+            height: auto;
+            display: block;
         }
 
-        .header .description {
-            font-size: 1rem;
-            opacity: 0.85;
-            max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.8;
+        .nav {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
         }
 
-        .doc-link {
-            margin-top: 25px;
-            text-align: center;
-        }
-
-        .btn-doc {
-            display: inline-block;
-            padding: 12px 35px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #667eea;
+        .nav a {
+            color: var(--ink);
             text-decoration: none;
-            border-radius: 30px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .btn-doc:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-            background: white;
-            border-color: white;
-        }
-
-        .badges {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+            font-weight: 500;
             padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
         }
 
-        .badge:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.05);
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
         }
 
-        .features {
+        .hero {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            align-items: stretch;
+            margin-bottom: 60px;
         }
 
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 1s ease-out;
+        .hero-card {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.08));
+            border-radius: 28px;
+            padding: 42px;
+            box-shadow: 0 20px 60px rgba(28, 12, 8, 0.28);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(14px);
+            animation: floatIn 1s ease-out both;
         }
 
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .feature-icon {
+        .hero h1 {
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
             font-size: 3rem;
-            margin-bottom: 15px;
+            line-height: 1.05;
+            margin-bottom: 16px;
         }
 
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: #667eea;
+        .hero p {
+            color: var(--ink-soft);
+            margin-bottom: 20px;
         }
 
-        .feature-card p {
-            color: #666;
-            line-height: 1.8;
+        .hero .tagline {
+            font-weight: 600;
+            color: var(--accent-dark);
+            letter-spacing: 0.02em;
+            margin-bottom: 12px;
         }
 
-        .cta-section {
-            text-align: center;
-            margin: 60px 0;
-            animation: fadeIn 1.5s ease-out;
-        }
-
-        .cta-section h2 {
-            color: white;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-        }
-
-        .buttons {
+        .cta {
             display: flex;
-            justify-content: center;
-            gap: 20px;
             flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
         }
 
         .btn {
-            padding: 15px 40px;
-            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border-radius: 999px;
+            font-size: 0.98rem;
+            font-weight: 600;
+            text-decoration: none;
             border: none;
-            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            font-weight: 600;
         }
 
         .btn-primary {
-            background: white;
-            color: #667eea;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #ff8352, #ffb86b);
+            color: white;
+            box-shadow: 0 12px 24px rgba(255, 119, 82, 0.35);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 18px 30px rgba(255, 119, 82, 0.45);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--ink);
+            border: 1px solid rgba(255, 255, 255, 0.75);
         }
 
-        .btn-secondary:hover {
+        .btn-ghost:hover {
             background: white;
-            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .badge {
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .hero-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: 100%;
+        }
+
+        .hero-panel .panel {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.08));
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 18px 36px rgba(36, 18, 14, 0.18);
+            backdrop-filter: blur(16px);
+            animation: fadeInUp 1s ease-out both;
+            flex: 1;
+        }
+
+        .panel h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--accent-dark);
+        }
+
+        .panel ul {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+            color: var(--ink-soft);
+        }
+
+        .panel li::before {
+            content: "•";
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        .section {
+            margin: 60px 0;
+        }
+
+        .section-title {
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+            font-size: 2rem;
+            margin-bottom: 18px;
+        }
+
+        .section-subtitle {
+            color: var(--ink-soft);
+            margin-bottom: 32px;
+            max-width: 720px;
+            text-align: center;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+        }
+
+        .feature-tile {
+            background: linear-gradient(150deg, rgba(255, 255, 255, 0.28), rgba(255, 233, 210, 0.18));
+            border-radius: 22px;
+            padding: 26px;
+            color: rgba(42, 27, 23, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            box-shadow: 0 18px 40px rgba(255, 165, 120, 0.22);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        .feature-tile:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(255, 140, 90, 0.3);
+        }
+
+        .feature-tile h4 {
+            margin: 12px 0 8px;
+            font-size: 1.15rem;
+            color: #b84626;
+        }
+
+        .feature-tile p {
+            color: rgba(42, 27, 23, 0.72);
         }
 
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
+            gap: 18px;
         }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.15);
+        .stat {
+            background: rgba(255, 246, 236, 0.35);
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            text-align: center;
+            color: rgba(42, 27, 23, 0.88);
+            box-shadow: inset 0 0 18px rgba(255, 200, 150, 0.2);
             backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .stat-card h3 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .stat-card p {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        .ide-support {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 50px 30px;
-            border-radius: 20px;
-            margin: 50px 0;
-            animation: fadeInUp 1.2s ease-out;
-        }
-
-        .ide-support h2 {
-            text-align: center;
-            color: #667eea;
+        .stat strong {
+            display: block;
             font-size: 2rem;
-            margin-bottom: 30px;
+            font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
         }
 
-        .ide-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            text-align: center;
-        }
-
-        .ide-item {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-
-        .ide-item:hover {
-            background: #e9ecef;
-            transform: translateY(-5px);
-        }
-
-        .ide-item .ide-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .ide-item .ide-name {
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .steps-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 50px 30px;
-            border-radius: 20px;
-            margin: 50px 0;
-            animation: fadeInUp 1.4s ease-out;
-        }
-
-        .steps-section h2 {
-            text-align: center;
-            color: #667eea;
-            font-size: 2rem;
-            margin-bottom: 40px;
+        .stat span {
+            color: var(--ink-soft);
         }
 
         .steps {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
         }
 
-        .step-card {
-            text-align: center;
-            padding: 30px 20px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            position: relative;
-            transition: all 0.3s ease;
+        .step {
+            background: rgba(255, 241, 228, 0.38);
+            border-radius: 18px;
+            padding: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: rgba(42, 27, 23, 0.88);
+            box-shadow: 0 16px 36px rgba(255, 160, 110, 0.22);
+            backdrop-filter: blur(10px);
         }
 
-        .step-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .step .num {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff8b61, #ffd37a);
             color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 20px;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            margin-bottom: 12px;
         }
 
-        .step-card h3 {
-            color: #495057;
-            margin-bottom: 10px;
+        .ide-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
         }
 
-        .step-card p {
-            color: #6c757d;
-            line-height: 1.6;
-        }
-
-        .highlight-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 50px 30px;
-            border-radius: 20px;
-            margin: 50px 0;
-            animation: fadeInUp 1.6s ease-out;
-        }
-
-        .highlight-section h2 {
+        .ide-item {
+            background: rgba(255, 238, 222, 0.32);
+            border-radius: 16px;
+            padding: 14px;
             text-align: center;
-            color: #667eea;
-            font-size: 2rem;
-            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.95rem;
+            color: rgba(42, 27, 23, 0.85);
+            backdrop-filter: blur(8px);
         }
 
-        .highlight-section .subtitle {
-            text-align: center;
-            color: #6c757d;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-        }
-
-        .highlight-content {
-            background: #f8f9fa;
+        .highlight {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.08));
+            border-radius: 24px;
             padding: 30px;
-            border-radius: 15px;
-            border-left: 4px solid #667eea;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
         }
 
-        .highlight-content h3 {
-            color: #495057;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .highlight-content ul {
+        .highlight ul {
             list-style: none;
-            padding: 0;
+            display: grid;
+            gap: 10px;
+            color: var(--ink-soft);
+            margin-top: 16px;
         }
 
-        .highlight-content li {
-            padding: 10px 0;
-            color: #6c757d;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .highlight-content li:before {
+        .highlight li::before {
             content: "✓";
-            position: absolute;
-            left: 0;
-            color: #667eea;
-            font-weight: bold;
-            font-size: 1.2rem;
+            margin-right: 8px;
+            color: var(--accent);
+            font-weight: 700;
         }
 
-        .btn-download {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
-        }
-
-        .btn-download:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        .cta-wide {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1));
+            border-radius: 28px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(16px);
         }
 
         .footer {
             text-align: center;
-            color: white;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 0.9rem;
             margin-top: 60px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .footer a {
-            color: white;
+            color: rgba(255, 255, 255, 0.92);
             text-decoration: none;
-            margin: 0 15px;
-            opacity: 0.9;
-            transition: opacity 0.3s ease;
+            margin: 0 10px;
         }
 
-        .footer a:hover {
-            opacity: 1;
-            text-decoration: underline;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
             }
-            to {
-                opacity: 1;
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes floatGlow {
+            0%, 100% {
                 transform: translateY(0);
             }
+            50% {
+                transform: translateY(30px);
+            }
         }
 
-        @keyframes fadeInUp {
+        @keyframes floatIn {
             from {
                 opacity: 0;
                 transform: translateY(30px);
@@ -435,41 +462,38 @@
             }
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
+        @media (max-width: 900px) {
+            .topbar {
+                flex-direction: column;
+                gap: 16px;
             }
 
-            .header .subtitle {
-                font-size: 1rem;
+            .hero h1 {
+                font-size: 2.4rem;
             }
 
-            .header .description {
-                font-size: 0.9rem;
+            .hero-card {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 16px 56px;
             }
 
-            .features {
-                grid-template-columns: 1fr;
-            }
-
-            .steps {
-                grid-template-columns: 1fr;
-            }
-
-            .ide-list {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
-
-            .buttons {
+            .cta {
                 flex-direction: column;
             }
 
@@ -480,187 +504,171 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1>🖼️ Markdown Image Kit</h1>
-        <p class="subtitle">在 JetBrains IDE 中高效管理 Markdown 图片 | 2.4.x 全新版本</p>
-        <p class="description">专为 JetBrains 全系列 IDE 设计的 Markdown 图片管理插件，让你在 IDE 中优雅地处理 Markdown
-            文档中的图片。支持一键上传、剪贴板监听、图床迁移、批量处理等强大功能。</p>
-        <div class="doc-link">
-            <a href="https://mik.dong4j.site/docs.html" target="_blank" class="btn-doc">
-                📚 查看用户手册
-            </a>
+<div class="page">
+    <div class="container">
+        <div class="topbar">
+            <div class="brand"><img src="./logo.svg" alt="Markdown Image Kit logo"></div>
+            <div class="nav">
+                <a href="https://mik.dong4j.site/docs.html" target="_blank">用户手册</a>
+                <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" target="_blank">Marketplace</a>
+                <a href="https://mik.dong4j.site/mik.zip">ZIP 下载</a>
+                <a href="https://github.com/dong4j/markdown-image-kit" target="_blank">GitHub</a>
+            </div>
         </div>
-        <div class="badges">
-            <span class="badge">✨ 一键上传</span>
-            <span class="badge">📦 批量处理</span>
-            <span class="badge">🔄 图床迁移</span>
-            <span class="badge">📋 剪贴板监听</span>
-            <span class="badge">🖼️ 图片压缩</span>
-            <span class="badge">⚡ 异步处理</span>
-            <span class="badge">🔒 安全可靠</span>
-        </div>
-    </div>
 
-    <div class="features">
-        <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3>一键上传替换</h3>
-            <p>自动检测文档中的本地图片，一键上传到图床并替换为 markdown 图片标记。支持批量处理，极速高效。</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📋</div>
-            <h3>剪贴板监听</h3>
-            <p>复制图片后直接粘贴，自动上传并插入图片链接。无需打开浏览器，专注写作不中断。</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🖼️</div>
-            <h3>图片压缩</h3>
-            <p>上传前自动压缩图片，减少存储空间和流量消耗。保持高质量的同时优化文件大小。</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🌐</div>
-            <h3>多图床支持</h3>
-            <p>支持自定义图床、PicList、PicGo 等。灵活配置，轻松切换，再也不用担心图床限制。</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🔄</div>
-            <h3>图床迁移</h3>
-            <p>一键将图片从旧图床迁移到新图床。数据不丢失，路径不失效，迁移零风险。</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎯</div>
-            <h3>智能处理</h3>
-            <p>单独处理某个图片，批量替换标签，随心所欲。不阻塞主线程，IDE 运行流畅如丝。</p>
-        </div>
-    </div>
+        <section class="hero">
+            <div class="hero-card">
+                <div class="tagline">JetBrains IDE 专属的 Markdown 图片工作流</div>
+                <h1>把图片管理做成“顺手”的体验</h1>
+                <p>Markdown Image Kit 为 JetBrains
+                    全家桶提供一站式图片处理：剪贴板粘贴、一键上传、图床迁移、批量替换与标签优化，让图片变成写作的加速器。</p>
+                <div class="badge-row">
+                    <span class="badge">一键上传</span>
+                    <span class="badge">剪贴板监听</span>
+                    <span class="badge">图床迁移</span>
+                    <span class="badge">批量处理</span>
+                    <span class="badge">图片压缩</span>
+                    <span class="badge">多功能入口</span>
+                    <span class="badge">多图床</span>
+                    <span class="badge">Code Vision</span>
+                </div>
+            </div>
+            <div class="hero-panel">
+                <div class="panel">
+                    <h3>写作更流畅</h3>
+                    <ul>
+                        <li>粘贴即上传，自动插入 Markdown 标签</li>
+                        <li>本地图片一键替换为线上链接</li>
+                        <li>支持 PicList / PicGo / 自定义图床</li>
+                    </ul>
+                </div>
+                <div class="panel">
+                    <h3>2.4.x 全新体验</h3>
+                    <ul>
+                        <li>插件体积更轻，功能更聚焦</li>
+                        <li>图床策略全面升级</li>
+                        <li>异步处理，不卡 IDE</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-    <div class="stats">
-        <div class="stat-card">
-            <h3>🌐 20+</h3>
-            <p>图床支持</p>
-        </div>
-        <div class="stat-card">
-            <h3>⭐ 20K+</h3>
-            <p>Downloads</p>
-        </div>
-        <div class="stat-card">
-            <h3>🚀 2.4.x</h3>
-            <p>最新版本</p>
-        </div>
-        <div class="stat-card">
-            <h3>💻 10+</h3>
-            <p>支持的 IDE</p>
-        </div>
-    </div>
+        <section class="section">
+            <h2 class="section-title">核心能力</h2>
+            <p class="section-subtitle">更少卡片、更强视觉聚焦，突出写作流程的关键环节。</p>
+            <div class="feature-grid">
+                <div class="feature-tile">
+                    <div>⚡</div>
+                    <h4>一键上传 + 批量替换</h4>
+                    <p>自动识别本地图片，批量上传并同步替换链接，文档迁移零成本。</p>
+                </div>
+                <div class="feature-tile">
+                    <div>📋</div>
+                    <h4>剪贴板直达</h4>
+                    <p>复制即粘贴上传，保持写作连贯性，专注内容本身。</p>
+                </div>
+                <div class="feature-tile">
+                    <div>🌐</div>
+                    <h4>图床策略自由</h4>
+                    <p>PicList / PicGo / 自建接口任意组合，满足团队与个人不同需求。</p>
+                </div>
+                <div class="feature-tile">
+                    <div>🧠</div>
+                    <h4>智能处理链</h4>
+                    <p>压缩、重命名、标签替换与上传串联执行，性能稳定不卡 IDE。</p>
+                </div>
+            </div>
+        </section>
 
-    <div class="steps-section">
-        <h2>📚 快速开始</h2>
-        <div class="steps">
-            <div class="step-card">
-                <div class="step-number">1</div>
-                <h3>安装插件</h3>
-                <p>在 IDE 的插件市场搜索 "Markdown Image Kit"，或者直接下载 zip 包离线安装</p>
+        <section class="section">
+            <h2 class="section-title">数据一眼看懂</h2>
+            <div class="stats">
+                <div class="stat"><strong>20+</strong><span>🌐 图床支持</span></div>
+                <div class="stat"><strong>20K+</strong><span>⭐ 下载量</span></div>
+                <div class="stat"><strong>2.4.x</strong><span>🚀 最新版本</span></div>
+                <div class="stat"><strong>10+</strong><span>💻 支持 IDE</span></div>
             </div>
-            <div class="step-card">
-                <div class="step-number">2</div>
-                <h3>配置图床</h3>
-                <p>在设置中配置你喜欢的图床（推荐使用 PicList），或者配置直连 OSS</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">3</div>
-                <h3>开始使用</h3>
-                <p>复制图片后直接粘贴，或者右键选择上传选项，即可自动上传并插入 Markdown 链接</p>
-            </div>
-            <div class="step-card">
-                <div class="step-number">4</div>
-                <h3>高级功能</h3>
-                <p>使用批量上传、图床迁移等高级功能，提升你的 Markdown 写作效率</p>
-            </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="ide-support">
-        <h2>🎮 支持的 IDE (2022.3+)</h2>
-        <div class="ide-list">
-            <div class="ide-item">
-                <div class="ide-icon">💡</div>
-                <div class="ide-name">IntelliJ IDEA</div>
+        <section class="section">
+            <h2 class="section-title">三步上手</h2>
+            <p class="section-subtitle">从安装到高效使用，只需几分钟。</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="num">1</div>
+                    <strong>安装插件</strong>
+                    <p>在插件市场搜索或使用 ZIP 离线安装。</p>
+                </div>
+                <div class="step">
+                    <div class="num">2</div>
+                    <strong>配置图床</strong>
+                    <p>选择 PicList / PicGo 或自定义图床。</p>
+                </div>
+                <div class="step">
+                    <div class="num">3</div>
+                    <strong>开始粘贴</strong>
+                    <p>复制图片直接粘贴，自动上传并插入。</p>
+                </div>
+                <div class="step">
+                    <div class="num">4</div>
+                    <strong>批量进阶</strong>
+                    <p>一键上传与迁移，集中处理旧文档。</p>
+                </div>
             </div>
-            <div class="ide-item">
-                <div class="ide-icon">🐍</div>
-                <div class="ide-name">PyCharm</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">⚡</div>
-                <div class="ide-name">WebStorm</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">🐘</div>
-                <div class="ide-name">PhpStorm</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">🔷</div>
-                <div class="ide-name">GoLand</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">🎯</div>
-                <div class="ide-name">Rider</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">🔧</div>
-                <div class="ide-name">CLion</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">💎</div>
-                <div class="ide-name">RubyMine</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">🗄️</div>
-                <div class="ide-name">DataGrip</div>
-            </div>
-            <div class="ide-item">
-                <div class="ide-icon">📱</div>
-                <div class="ide-name">Android Studio</div>
-            </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="highlight-section">
-        <h2>🌟 2.4.x 版本亮点</h2>
-        <p class="subtitle">从 OSS 直连到第三方工具对接的演进</p>
-        <div class="highlight-content">
-            <h3>🔄 新的集成策略</h3>
-            <ul>
-                <li><strong>插件更轻量</strong> - 不再需要集成各种云服务 SDK，减少插件体积</li>
-                <li><strong>支持更广泛</strong> - 通过 PicList/PicGo 支持 20+ 种图床，覆盖几乎所有主流服务</li>
-                <li><strong>配置更灵活</strong> - 图床配置在第三方工具中管理，更加直观和易用</li>
-                <li><strong>职责更清晰</strong> - 插件专注于 Markdown 图片标签处理，图床管理交给专业工具</li>
-                <li><strong>无缝兼容</strong> - 保留对常用图床的直接支持，同时推荐使用第三方工具获得最佳体验</li>
-            </ul>
-        </div>
-    </div>
+        <section class="section">
+            <h2 class="section-title">支持的 IDE（2022.3+）</h2>
+            <div class="ide-list">
+                <div class="ide-item">IntelliJ IDEA</div>
+                <div class="ide-item">PyCharm</div>
+                <div class="ide-item">WebStorm</div>
+                <div class="ide-item">PhpStorm</div>
+                <div class="ide-item">GoLand</div>
+                <div class="ide-item">Rider</div>
+                <div class="ide-item">CLion</div>
+                <div class="ide-item">RubyMine</div>
+                <div class="ide-item">DataGrip</div>
+                <div class="ide-item">Android Studio</div>
+            </div>
+        </section>
 
-    <div class="cta-section">
-        <h2>🎉 现在就体验</h2>
-        <div class="buttons">
-            <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" target="_blank" class="btn btn-primary">
-                📥 从 JetBrains Marketplace 下载
-            </a>
-            <a href="https://mik.dong4j.site/mik.zip" class="btn btn-download">
-                💾 直接下载插件 ZIP 包（离线安装）
-            </a>
-            <a href="https://github.com/dong4j/markdown-image-kit" target="_blank" class="btn btn-secondary">
-                ⭐ 在 GitHub 上查看
-            </a>
-        </div>
-    </div>
+        <section class="section">
+            <h2 class="section-title">2.4.x 版本亮点</h2>
+            <p class="section-subtitle">从 OSS 直连到第三方工具对接的演进，让插件更轻、更快、更自由。</p>
+            <div class="highlight">
+                <strong>新的集成策略</strong>
+                <ul>
+                    <li>插件更轻量：避免集成多个云服务 SDK。</li>
+                    <li>支持更广泛：PicList/PicGo 覆盖 20+ 图床。</li>
+                    <li>配置更灵活：图床集中在第三方工具管理。</li>
+                    <li>职责更清晰：插件聚焦标签与上传体验。</li>
+                    <li>无缝兼容：保留常用直连方案。</li>
+                </ul>
+            </div>
+        </section>
 
-    <div class="footer">
-        <p>©2025 Markdown Image Kit | <a href="https://github.com/dong4j/markdown-image-kit" target="_blank">GitHub</a> |
-            <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" target="_blank">Marketplace</a> |
-            <a href="https://github.com/dong4j/markdown-image-kit/issues" target="_blank">Issues</a></p>
-        <p style="margin-top: 15px; opacity: 0.8;">Made with ❤️ by dong4j</p>
+        <section class="section">
+            <div class="cta-wide">
+                <h2 class="section-title">现在就开始体验</h2>
+                <p class="section-subtitle">无论你是技术博客、团队文档还是产品说明，这里都有更顺畅的图片流程。</p>
+                <div class="cta">
+                    <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" target="_blank" class="btn btn-primary">前往
+                        Marketplace</a>
+                    <a href="https://mik.dong4j.site/mik.zip" class="btn btn-ghost">下载 ZIP 包</a>
+                    <a href="https://github.com/dong4j/markdown-image-kit" target="_blank" class="btn btn-ghost">查看 GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>©2025 Markdown Image Kit
+                <a href="https://github.com/dong4j/markdown-image-kit" target="_blank">GitHub</a>
+                <a href="https://plugins.jetbrains.com/plugin/12192-markdown-image-kit" target="_blank">Marketplace</a>
+                <a href="https://github.com/dong4j/markdown-image-kit/issues" target="_blank">Issues</a>
+            </p>
+            <p style="margin-top: 12px;">Made with ❤️ by dong4j</p>
+        </footer>
     </div>
 </div>
 </body>
