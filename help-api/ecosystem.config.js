@@ -4,7 +4,7 @@ module.exports = {
       name: 'mik-help-api', // 应用名称
       namespace: 'mik', // 指定命名空间
       version: '1.0.0', // 应用版本
-      cwd: '/Users/dong4j/Developer/MIK/help-api', // 当前工作目录
+      cwd: '~/Developer/MIK/help-api', // 当前工作目录
       script: './index.js', // 主脚本路径，相对于 cwd
       watch: true, // 是否启用文件监控
       ignore_watch: ['node_modules', 'logs'], // 忽略监控的文件或目录

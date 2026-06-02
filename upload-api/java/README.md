@@ -89,7 +89,7 @@ http://localhost:12345/archive/png/1634567890123image.png
 # 文件上传路径（需要有写入权限）
 # Windows: web.upload-path=D:/upload/
 # Linux/Mac: web.upload-path=/home/user/upload/
-web.upload-path=/Users/dong4j/Downloads/
+web.upload-path=~/Downloads/
 
 # 服务端口
 server.port=12345

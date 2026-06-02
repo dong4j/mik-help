@@ -1,5 +1,9 @@
 # Repository Guidelines
 
+1. **每次回答前后回答结束后都需要叫我:【dong4j】**
+2. **我提出的需求必须先给出实现方案并征求确认，确认后才能修改代码**
+3. **代码修改完成后使用 compile.sh 编译代码确保没有编译问题**
+
 ## 项目结构与模块组织
 
 - `help-api/`：Node.js 单文件帮助文档服务（入口 `help-api/index.js`，配置 `help-api/config.json`）。
